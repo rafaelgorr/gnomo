@@ -1,0 +1,12 @@
+model DbIngredient {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  name     String  @db.VarChar(50)
+  quantity Decimal @db.Decimal(10, 2)
+
+  recipe    DbRecipe @relation(fields: [recipe_id], references: [id], onDelete: Cascade)
+  recipe_id String   @db.Uuid
+
+  @@map("db_ingredient")
+  @@schema("kitchen")
+}
