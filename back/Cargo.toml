@@ -1,0 +1,30 @@
+[package]
+name = "back"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+axum = "0.8.9"
+chrono = { version = "0.4.45", features = ["serde"] }
+dotenvy = "0.15.7"
+serde = "1.0.228"
+sqlx = { version = "0.9.0", features = [
+  "runtime-tokio",
+  "postgres",
+  "macros",
+  "sqlx-toml",
+  "uuid",
+  "bigdecimal",
+  "time",
+  "chrono",
+] }
+sqlx-cli = "0.9.0"
+sqlx-gen = { version = "0.5.8", features = ["cli"] }
+tokio = { version = "1.52.3", features = ["full"] }
+uuid = { version = "1.23.3", features = ["v4", "serde"] }
+bigdecimal = { version = "0.4", features = ["serde"] }
+thiserror = "2.0.18"
+serde_json = "1.0.150"
+tracing = "0.1.44"
+validator = { version = "0.21", features = ["derive"] }
+tower = { version = "0.5.3", features = ["util"] }
