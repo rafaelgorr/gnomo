@@ -22,7 +22,7 @@ pub async fn create_app(db_pool: &Pool<Postgres>) -> Router {
         .with_state(app_state)
         .fallback(fallback_handler);
 
-    println!("Database disconnected!");
+    // println!("Database disconnected!");
 
     app.clone()
 }

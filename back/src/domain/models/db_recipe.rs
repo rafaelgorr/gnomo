@@ -14,6 +14,8 @@ pub struct DbRecipe {
     pub id: Uuid,
     pub name: String,
     pub description: Option<String>,
+    pub prep_time: i32,
+    pub cook_time: i32,
     #[sqlx_gen(column_default = "CURRENT_TIMESTAMP")]
     pub created_at: NaiveDateTime,
     pub updated_at: Option<NaiveDateTime>,

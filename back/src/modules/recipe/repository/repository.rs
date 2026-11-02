@@ -7,6 +7,8 @@ use crate::{
     modules::recipe::dto::create::CreateIngredientDto,
 };
 
+use super::structs::CreateDbRecipe;
+
 pub struct RecipeRepository {
     db_pool: Pool<Postgres>,
 }
@@ -24,6 +26,8 @@ impl RecipeRepository {
                 R.id,
                 R.name,
                 R.description,
+                R.cook_time,
+                R.prep_time,
                 R.created_at as "created_at: chrono::NaiveDateTime",
                 R.updated_at as "updated_at: chrono::NaiveDateTime",
                 R.deleted_at as "deleted_at: chrono::NaiveDateTime"
@@ -43,18 +47,18 @@ impl RecipeRepository {
         &self,
         recipe_ids: Vec<Uuid>,
     ) -> Result<Vec<DbIngredient>, AppError> {
-        let query = sqlx::query_as::<_, DbIngredient>(
+        let query = sqlx::query_as!(
+            DbIngredient,
             r#"
               SELECT
                 I.id,
-                I.name,
-                I.quantity,
+                I.description,
                 I.recipe_id
               FROM kitchen.db_ingredient I
               WHERE I.recipe_id = ANY($1)              
             "#,
+            &recipe_ids
         )
-        .bind(&recipe_ids)
         .fetch_all(&self.db_pool);
 
         match query.await {
@@ -69,17 +73,14 @@ impl RecipeRepository {
         ingredients: Vec<CreateIngredientDto>,
         tx: &mut Transaction<'_, Postgres>,
     ) -> Result<Vec<DbIngredient>, AppError> {
-        let mut query_builder: sqlx::QueryBuilder<sqlx::Postgres> = sqlx::QueryBuilder::new(
-            " INSERT INTO kitchen.db_ingredient (name, quantity, recipe_id) ",
-        );
+        let mut query_builder: sqlx::QueryBuilder<sqlx::Postgres> =
+            sqlx::QueryBuilder::new(" INSERT INTO kitchen.db_ingredient (description, recipe_id) ");
 
         query_builder.push_values(ingredients, |mut b, ingredient| {
-            b.push_bind(ingredient.name)
-                .push_bind(ingredient.quantity)
-                .push_bind(recipe_id);
+            b.push_bind(ingredient.description).push_bind(recipe_id);
         });
 
-        query_builder.push(" RETURNING id, name, quantity, recipe_id");
+        query_builder.push(" RETURNING id, description, recipe_id");
 
         let query = query_builder.build_query_as::<DbIngredient>();
 
@@ -91,32 +92,44 @@ impl RecipeRepository {
 
     pub async fn create_recipe(
         &self,
-        name: String,
-        description: String,
-        ingredients: Vec<CreateIngredientDto>,
+        db_recipe: CreateDbRecipe,
     ) -> Result<(DbRecipe, Vec<DbIngredient>), AppError> {
         let mut tx: Transaction<'_, Postgres> = self.db_pool.begin().await?;
 
+        let CreateDbRecipe {
+            name,
+            description,
+            prep_time,
+            cook_time,
+            ingredients,
+        } = db_recipe;
         let query = sqlx::query_as!(
             DbRecipe,
             r#"
-              INSERT INTO kitchen.db_recipe (name, description)
-              VALUES ($1, $2)
+              INSERT INTO kitchen.db_recipe (name, description,cook_time, prep_time)
+              VALUES ($1, $2, $3, $4)
               RETURNING 
                 id, 
                 name, 
                 description,
+                cook_time,
+                prep_time,
                 created_at as "created_at: chrono::NaiveDateTime",
                 updated_at as "updated_at: chrono::NaiveDateTime",
                 deleted_at as "deleted_at: chrono::NaiveDateTime"
         
             "#,
             name,
-            description
+            description,
+            prep_time,
+            cook_time
         )
         .fetch_one(&mut *tx);
 
-        let recipe = query.await?;
+        let recipe = match query.await {
+            Ok(recipe_response) => recipe_response,
+            Err(error) => return Err(AppError::Database(error)),
+        };
 
         let recipe_ingredients: Vec<DbIngredient> = if ingredients.len() > 0 {
             self.insert_ingredients_on_recipe(recipe.id, ingredients, &mut tx)

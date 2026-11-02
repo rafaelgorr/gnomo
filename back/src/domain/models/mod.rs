@@ -4,3 +4,4 @@
 
 pub mod db_ingredient;
 pub mod db_recipe;
+pub mod db_recipe_step;

@@ -30,11 +30,14 @@ impl IntoResponse for AppError {
                 // Log the real internal error safely using tracing
                 tracing::error!("Database internal error: {:?}", err);
 
+                #[cfg(debug_assertions)]
+                let message = err;
+
+                #[cfg(not(debug_assertions))]
+                let message = "An internal server error occurred.";
+
                 // Keep the server's internals private from the public API
-                (
-                    StatusCode::INTERNAL_SERVER_ERROR,
-                    "An internal server error occurred.".to_string(),
-                )
+                (StatusCode::INTERNAL_SERVER_ERROR, message.to_string())
             }
             AppError::NotFound => (StatusCode::NOT_FOUND, self.to_string()),
             AppError::BadRequest(msg) => (StatusCode::BAD_REQUEST, msg),

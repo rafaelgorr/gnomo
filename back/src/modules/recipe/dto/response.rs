@@ -7,16 +7,14 @@ use crate::models::db_recipe::DbRecipe;
 #[derive(Debug, Deserialize, Serialize)]
 pub struct IngredientDto {
     pub id: Uuid,
-    pub name: String,
-    pub quantity: bigdecimal::BigDecimal,
+    pub description: String,
 }
 
 impl From<DbIngredient> for IngredientDto {
     fn from(recipe: DbIngredient) -> Self {
         Self {
             id: recipe.id,
-            name: recipe.name,
-            quantity: recipe.quantity,
+            description: recipe.description,
         }
     }
 }

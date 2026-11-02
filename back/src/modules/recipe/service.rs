@@ -5,9 +5,11 @@ use crate::{
     models::{db_ingredient::DbIngredient, db_recipe::DbRecipe},
     modules::recipe::{
         dto::create::{CreateIngredientDto, CreateRecipeDto},
-        repository::RecipeRepository,
+        repository::repository::RecipeRepository,
     },
 };
+
+use super::repository::structs::CreateDbRecipe;
 
 pub struct RecipeService {
     recipe_repository: RecipeRepository,
@@ -41,11 +43,11 @@ impl RecipeService {
         &self,
         dtos: (CreateRecipeDto, Vec<CreateIngredientDto>),
     ) -> Result<(DbRecipe, Vec<DbIngredient>), AppError> {
-        let (CreateRecipeDto { name, description }, ingredients) = dtos;
+        let (recipe_dto, ingredients) = dtos;
 
         let recipe = self
             .recipe_repository
-            .create_recipe(name, description, ingredients)
+            .create_recipe(CreateDbRecipe::new(recipe_dto, ingredients))
             .await;
 
         recipe

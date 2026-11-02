@@ -11,7 +11,6 @@ use uuid::Uuid;
 pub struct DbIngredient {
     #[sqlx_gen(primary_key, column_default = "gen_random_uuid()")]
     pub id: Uuid,
-    pub name: String,
-    pub quantity: bigdecimal::BigDecimal,
+    pub description: String,
     pub recipe_id: Uuid,
 }

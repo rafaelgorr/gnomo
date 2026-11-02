@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use sqlx::{Pool, Postgres};
 
-use crate::modules::recipe::{repository::RecipeRepository, service::RecipeService};
+use crate::modules::recipe::{repository::repository::RecipeRepository, service::RecipeService};
 
 pub mod dto;
 pub mod handler;
