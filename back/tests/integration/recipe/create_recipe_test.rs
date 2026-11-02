@@ -9,7 +9,6 @@ use back::modules::recipe::{
     },
     handler::CreateRecipeRequest,
 };
-use bigdecimal::{BigDecimal, FromPrimitive};
 use sqlx::{Pool, Postgres};
 use tower::ServiceExt;
 
@@ -23,17 +22,17 @@ async fn create_recipe(pool: Pool<Postgres>) -> sqlx::Result<()> {
     let recipe_description = "New recipe description".to_string();
     let recipe = CreateRecipeDto {
         name: recipe_name.clone(),
-        description: recipe_description.clone(),
+        description: Some(recipe_description.clone()),
+        prep_time: 30,
+        cook_time: 30,
     };
 
     let ingredient_1 = CreateIngredientDto {
-        name: "New ingredient 1".to_string(),
-        quantity: BigDecimal::from_f64(1.5).unwrap(),
+        description: "1/4 cup water".to_string(),
     };
 
     let ingredient_2 = CreateIngredientDto {
-        name: "New ingredient 2".to_string(),
-        quantity: BigDecimal::from_f64(2.5).unwrap(),
+        description: "1 (16-ounce) container cottage cheese".to_string(),
     };
 
     let payload = serde_json::to_vec(&CreateRecipeRequest {

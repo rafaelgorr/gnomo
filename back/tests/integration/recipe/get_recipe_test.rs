@@ -3,10 +3,12 @@ use axum::{
     http::{self, Request, StatusCode},
 };
 use back::modules::recipe::{
-    dto::{create::CreateIngredientDto, response::RecipeDto},
-    repository::RecipeRepository,
+    dto::{
+        create::{CreateIngredientDto, CreateRecipeDto},
+        response::RecipeDto,
+    },
+    repository::{repository::RecipeRepository, structs::CreateDbRecipe},
 };
-use bigdecimal::{BigDecimal, FromPrimitive};
 use sqlx::{Pool, Postgres};
 use tower::ServiceExt;
 
@@ -18,27 +20,27 @@ async fn get_recipe(pool: Pool<Postgres>) -> sqlx::Result<()> {
 
     let recipe_repository = RecipeRepository::new(pool);
 
-    let ingredient_name_1 = "Test ingredient 1".to_string();
-    let ingredient_quantity_1 = BigDecimal::from_f64(1.5).unwrap();
-
-    let ingredient_name_2 = "Test ingredient 2".to_string();
-    let ingredient_quantity_2 = BigDecimal::from_f64(3.0).unwrap();
+    let ingredient_description_1 =
+        "8 ounces frozen chopped spinach, thawed, or 1 pound ground beef".to_string();
+    let ingredient_description_2 = "Salt and freshly ground black pepper, as needed".to_string();
 
     let (recipe, ingredients) = recipe_repository
-        .create_recipe(
-            String::from("Recipe 1"),
-            String::from("This is a test recipe"),
+        .create_recipe(CreateDbRecipe::new(
+            CreateRecipeDto {
+                name: String::from("Recipe 1"),
+                description: Some(String::from("This is a test recipe")),
+                prep_time: 30,
+                cook_time: 30,
+            },
             vec![
                 CreateIngredientDto {
-                    name: ingredient_name_1.clone(),
-                    quantity: ingredient_quantity_1.clone(),
+                    description: ingredient_description_1.clone(),
                 },
                 CreateIngredientDto {
-                    name: ingredient_name_2.clone(),
-                    quantity: ingredient_quantity_2.clone(),
+                    description: ingredient_description_2.clone(),
                 },
             ],
-        )
+        ))
         .await
         .unwrap();
 
@@ -70,14 +72,12 @@ async fn get_recipe(pool: Pool<Postgres>) -> sqlx::Result<()> {
     assert!(
         ingredients
             .iter()
-            .any(|ingredient| ingredient.name == ingredient_name_1
-                && ingredient.quantity == ingredient_quantity_1)
+            .any(|ingredient| ingredient.description == ingredient_description_1)
     );
     assert!(
         ingredients
             .iter()
-            .any(|ingredient| ingredient.name == ingredient_name_2
-                && ingredient.quantity == ingredient_quantity_2)
+            .any(|ingredient| ingredient.description == ingredient_description_2)
     );
 
     Ok(())
