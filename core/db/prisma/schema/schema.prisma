@@ -1,6 +1,4 @@
 datasource db {
   provider = "postgresql"
-  schemas = ["kitchen"]
+  schemas  = ["kitchen"]
 }
-
-

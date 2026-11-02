@@ -1,10 +1,29 @@
+model DbStep {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  index Int
+
+  instruction String? @db.VarChar(500)
+
+  dbRecipe   DbRecipe @relation(fields: [dbRecipeId], references: [id])
+  dbRecipeId String   @db.Uuid
+
+  @@map("db_recipe_step")
+  @@schema("kitchen")
+}
+
 model DbRecipe {
   id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
-  name String @db.VarChar(25)
-  description String? @db.VarChar(50)
+  name        String  @db.VarChar(100)
+  description String? @db.VarChar(500)
 
-  ingredient DbIngredient[]
+  // times in minutes
+  prep_time Int
+  cook_time Int
+
+  ingredients DbIngredient[]
+  directions  DbStep[]
 
   created_at DateTime  @default(now()) @db.Timestamp(6)
   updated_at DateTime? @updatedAt @db.Timestamp(6)
