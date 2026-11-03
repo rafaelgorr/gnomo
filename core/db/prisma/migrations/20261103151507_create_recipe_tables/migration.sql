@@ -14,8 +14,8 @@ CREATE TABLE "kitchen"."db_ingredient" (
 CREATE TABLE "kitchen"."db_recipe_step" (
     "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "index" INTEGER NOT NULL,
-    "instruction" VARCHAR(500),
-    "dbRecipeId" UUID NOT NULL,
+    "instruction" VARCHAR(500) NOT NULL,
+    "recipe_id" UUID NOT NULL,
 
     CONSTRAINT "db_recipe_step_pkey" PRIMARY KEY ("id")
 );
@@ -38,4 +38,4 @@ CREATE TABLE "kitchen"."db_recipe" (
 ALTER TABLE "kitchen"."db_ingredient" ADD CONSTRAINT "db_ingredient_recipe_id_fkey" FOREIGN KEY ("recipe_id") REFERENCES "kitchen"."db_recipe"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "kitchen"."db_recipe_step" ADD CONSTRAINT "db_recipe_step_dbRecipeId_fkey" FOREIGN KEY ("dbRecipeId") REFERENCES "kitchen"."db_recipe"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "kitchen"."db_recipe_step" ADD CONSTRAINT "db_recipe_step_recipe_id_fkey" FOREIGN KEY ("recipe_id") REFERENCES "kitchen"."db_recipe"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

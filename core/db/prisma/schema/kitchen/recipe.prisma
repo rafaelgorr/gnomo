@@ -3,10 +3,10 @@ model DbStep {
 
   index Int
 
-  instruction String? @db.VarChar(500)
+  instruction String @db.VarChar(500)
 
-  dbRecipe   DbRecipe @relation(fields: [dbRecipeId], references: [id])
-  dbRecipeId String   @db.Uuid
+  recipe    DbRecipe @relation(fields: [recipe_id], references: [id])
+  recipe_id String   @db.Uuid
 
   @@map("db_recipe_step")
   @@schema("kitchen")
