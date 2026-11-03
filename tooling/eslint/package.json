@@ -1,0 +1,23 @@
+{
+  "name": "@tooling/eslint",
+  "version": "0.1.0",
+  "description": "ESLint configuration for monorepo structure",
+  "keywords": [],
+  "private": true,
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@eslint/js": "catalog:",
+    "@typescript-eslint/eslint-plugin": "^8.71.2",
+    "@typescript-eslint/parser": "^8.71.2",
+    "@tooling/prettier": "workspace:*",
+    "eslint": "catalog:",
+    "eslint-config-prettier": "^9.1.2",
+    "eslint-plugin-prettier": "^5.5.7",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "catalog:",
+    "eslint-plugin-unused-imports": "^4.4.1",
+    "typescript": "^6.0.2",
+    "typescript-eslint": "catalog:"
+  },
+  "prettier": "@tooling/prettier"
+}

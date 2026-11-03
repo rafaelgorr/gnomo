@@ -1,0 +1,16 @@
+{
+  "name": "@tooling/typescript",
+  "version": "0.1.0",
+  "description": "TypeScript configuration for monorepo structure",
+  "keywords": [],
+  "author": "@kea-inc",
+  "license": "UNLICENSED",
+  "private": true,
+  "files": [
+    "base.json"
+  ],
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

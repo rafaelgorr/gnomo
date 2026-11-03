@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "useDefineForClassFields": true,
+    "lib": ["ES2024", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "forceConsistentCasingInFileNames": true, // Disallow inconsistently-cased references to the same file
+    "jsx": "react-jsx",
+
+    /* Strict Type-Checking Options */
+    "strict": true, // Enable all strict type-checking options
+    "noImplicitAny": true, // Raise error on expressions and declarations with an implied 'any' type
+    "strictNullChecks": true, // Enable strict null checking
+    "strictFunctionTypes": true, // Enable strict checking of function types
+    "strictBindCallApply": true, // Enable strict 'bind', 'call', and 'apply' methods on functions
+    "strictPropertyInitialization": true, // Ensure non-undefined class properties are initialized in the constructor
+    "noImplicitThis": true, // Raise error on 'this' expressions with an implied 'any' type
+    "alwaysStrict": true, // Parse in strict mode and emit "use strict" for each source file
+    "allowUnusedLabels": false, // Disallow unused labels
+    "allowUnreachableCode": false, // Disallow unreachable code
+    "noImplicitOverride": true, // Ensure that the 'override' keyword is used when overriding methods
+    "noPropertyAccessFromIndexSignature": false, // Disallow property access via index signatures
+    "noUncheckedIndexedAccess": true, // Ensure that every indexed access is checked
+
+    /* Additional Checks */
+    "noUnusedLocals": true, // Report errors on unused locals
+    "noUnusedParameters": true, // Report errors on unused parameters
+    "noImplicitReturns": true, // Report error when not all code paths in function return a value
+    "noFallthroughCasesInSwitch": true, // Report errors for fallthrough cases in switch statement
+
+    /* Other Options */
+    "skipLibCheck": true, // Skip type checking of declaration files
+    "incremental": true // Disable incremental compilation
+  },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}

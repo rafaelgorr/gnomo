@@ -1,0 +1,18 @@
+import babel from '@rolldown/plugin-babel'
+import react, { reactCompilerPreset } from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [react(), babel({ presets: [reactCompilerPreset()] })],
+  server: {
+    port: 3030,
+  },
+  preview: {
+    port: 3030,
+  },
+  build: {
+    sourcemap: true,
+    chunkSizeWarningLimit: 3000,
+  },
+})
