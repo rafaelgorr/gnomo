@@ -1,0 +1,34 @@
+import tailwindcss from '@tailwindcss/vite'
+import react from '@vitejs/plugin-react'
+import { resolve } from 'node:path'
+import { defineConfig } from 'vite'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [
+    react({ compiler: true }),
+    tailwindcss(),
+    viteStaticCopy({
+      targets: [
+        {
+          src: './package.json',
+          dest: '.',
+        },
+        {
+          src: './src/assets',
+          dest: './src',
+        },
+        {
+          src: './src/lib',
+          dest: './src',
+        },
+      ],
+    }),
+  ],
+  resolve: {
+    alias: {
+      '@': resolve(import.meta.dirname, './src'),
+    },
+  },
+})
