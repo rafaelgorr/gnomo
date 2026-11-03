@@ -4,10 +4,10 @@ use axum::{
 };
 use back::modules::recipe::{
     dto::{
-        create::{CreateIngredientDto, CreateRecipeDto},
+        create::{CreateIngredientDto, CreateRecipeDto, CreateStepDto},
         response::RecipeDto,
     },
-    handler::CreateRecipeRequest,
+    handler::contract::CreateRecipeRequest,
 };
 use sqlx::{Pool, Postgres};
 use tower::ServiceExt;
@@ -35,9 +35,20 @@ async fn create_recipe(pool: Pool<Postgres>) -> sqlx::Result<()> {
         description: "1 (16-ounce) container cottage cheese".to_string(),
     };
 
+    let step_1: CreateStepDto = CreateStepDto {
+        instruction: "Heat 2 tablespoons oil in a large".to_string(),
+        index: 0,
+    };
+    let step_2: CreateStepDto = CreateStepDto {
+        instruction: "Heat remaining 2 tablespoons oil in the same skillet over medium-high heat."
+            .to_string(),
+        index: 1,
+    };
+
     let payload = serde_json::to_vec(&CreateRecipeRequest {
         recipe,
         ingredients: vec![ingredient_1, ingredient_2],
+        directions: vec![step_1, step_2],
     })
     .unwrap();
 

@@ -3,10 +3,9 @@ use axum::{
     routing::{get, post},
 };
 
-use crate::{
-    app_state::AppState,
-    modules::recipe::handler::{create_recipe, get_recipes},
-};
+use crate::app_state::AppState;
+
+use super::handler::handler::{create_recipe, get_recipes};
 
 pub fn router() -> Router<AppState> {
     let router: Router<AppState> = Router::new()

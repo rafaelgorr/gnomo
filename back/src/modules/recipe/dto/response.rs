@@ -3,6 +3,7 @@ use uuid::Uuid;
 
 use crate::models::db_ingredient::DbIngredient;
 use crate::models::db_recipe::DbRecipe;
+use crate::models::db_recipe_step::DbRecipeStep;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct IngredientDto {
@@ -11,10 +12,27 @@ pub struct IngredientDto {
 }
 
 impl From<DbIngredient> for IngredientDto {
-    fn from(recipe: DbIngredient) -> Self {
+    fn from(ingredient: DbIngredient) -> Self {
         Self {
-            id: recipe.id,
-            description: recipe.description,
+            id: ingredient.id,
+            description: ingredient.description,
+        }
+    }
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct StepDto {
+    pub id: Uuid,
+    pub index: i32,
+    pub instruction: String,
+}
+
+impl From<DbRecipeStep> for StepDto {
+    fn from(step: DbRecipeStep) -> Self {
+        Self {
+            id: step.id,
+            index: step.index,
+            instruction: step.instruction,
         }
     }
 }
@@ -26,12 +44,14 @@ pub struct RecipeDto {
     pub description: Option<String>,
     pub created_at: chrono::NaiveDateTime,
     pub ingredients: Vec<IngredientDto>,
+    pub directions: Vec<StepDto>,
 }
 
 #[derive(Debug, Serialize)]
 pub struct RecipeAggragate {
     pub recipe: DbRecipe,
     pub ingredients: Vec<DbIngredient>,
+    pub directions: Vec<DbRecipeStep>,
 }
 
 impl From<RecipeAggragate> for RecipeDto {
@@ -44,7 +64,12 @@ impl From<RecipeAggragate> for RecipeDto {
             ingredients: values
                 .ingredients
                 .into_iter()
-                .map(|ingredient: DbIngredient| IngredientDto::from(ingredient))
+                .map(|ingredient| IngredientDto::from(ingredient))
+                .collect(),
+            directions: values
+                .directions
+                .into_iter()
+                .map(|step| StepDto::from(step))
                 .collect(),
         }
     }

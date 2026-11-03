@@ -2,14 +2,14 @@ use uuid::Uuid;
 
 use crate::{
     app_error::AppError,
-    models::{db_ingredient::DbIngredient, db_recipe::DbRecipe},
+    models::{db_ingredient::DbIngredient, db_recipe::DbRecipe, db_recipe_step::DbRecipeStep},
     modules::recipe::{
         dto::create::{CreateIngredientDto, CreateRecipeDto},
         repository::repository::RecipeRepository,
     },
 };
 
-use super::repository::structs::CreateDbRecipe;
+use super::{dto::create::CreateStepDto, repository::structs::CreateDbRecipe};
 
 pub struct RecipeService {
     recipe_repository: RecipeRepository,
@@ -24,7 +24,7 @@ impl RecipeService {
 
     pub async fn get_ingredients_by_recipes(
         &self,
-        recipe_ids: Vec<Uuid>,
+        recipe_ids: &Vec<Uuid>,
     ) -> Result<Vec<DbIngredient>, AppError> {
         let ingredients = self
             .recipe_repository
@@ -33,6 +33,19 @@ impl RecipeService {
 
         ingredients
     }
+
+    pub async fn get_directions_by_recipes(
+        &self,
+        recipe_ids: &Vec<Uuid>,
+    ) -> Result<Vec<DbRecipeStep>, AppError> {
+        let directions = self
+            .recipe_repository
+            .get_directions_by_recipes(recipe_ids)
+            .await;
+
+        directions
+    }
+
     pub async fn get_recipes(&self) -> Vec<DbRecipe> {
         let recipes = self.recipe_repository.get_recipes().await;
 
@@ -41,13 +54,17 @@ impl RecipeService {
 
     pub async fn create_recipe(
         &self,
-        dtos: (CreateRecipeDto, Vec<CreateIngredientDto>),
-    ) -> Result<(DbRecipe, Vec<DbIngredient>), AppError> {
-        let (recipe_dto, ingredients) = dtos;
+        dtos: (
+            CreateRecipeDto,
+            Vec<CreateIngredientDto>,
+            Vec<CreateStepDto>,
+        ),
+    ) -> Result<(DbRecipe, Vec<DbIngredient>, Vec<DbRecipeStep>), AppError> {
+        let (recipe_dto, ingredients, directions) = dtos;
 
         let recipe = self
             .recipe_repository
-            .create_recipe(CreateDbRecipe::new(recipe_dto, ingredients))
+            .create_recipe(CreateDbRecipe::new(recipe_dto, ingredients, directions))
             .await;
 
         recipe

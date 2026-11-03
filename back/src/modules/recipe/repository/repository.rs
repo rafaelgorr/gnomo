@@ -3,8 +3,8 @@ use uuid::Uuid;
 
 use crate::{
     app_error::AppError,
-    models::{db_ingredient::DbIngredient, db_recipe::DbRecipe},
-    modules::recipe::dto::create::CreateIngredientDto,
+    models::{db_ingredient::DbIngredient, db_recipe::DbRecipe, db_recipe_step::DbRecipeStep},
+    modules::recipe::dto::create::{CreateIngredientDto, CreateStepDto},
 };
 
 use super::structs::CreateDbRecipe;
@@ -45,7 +45,7 @@ impl RecipeRepository {
 
     pub async fn get_ingredients_by_recipes(
         &self,
-        recipe_ids: Vec<Uuid>,
+        recipe_ids: &Vec<Uuid>,
     ) -> Result<Vec<DbIngredient>, AppError> {
         let query = sqlx::query_as!(
             DbIngredient,
@@ -63,6 +63,31 @@ impl RecipeRepository {
 
         match query.await {
             Ok(ingredients) => Ok(ingredients),
+            Err(error) => Err(AppError::Database(error)),
+        }
+    }
+
+    pub async fn get_directions_by_recipes(
+        &self,
+        recipe_ids: &Vec<Uuid>,
+    ) -> Result<Vec<DbRecipeStep>, AppError> {
+        let query = sqlx::query_as!(
+            DbRecipeStep,
+            r#"
+              SELECT
+                S.id,
+                S.index,
+                S.instruction,
+                S.recipe_id
+              FROM kitchen.db_recipe_step S
+              WHERE S.recipe_id = ANY($1)              
+            "#,
+            &recipe_ids
+        )
+        .fetch_all(&self.db_pool);
+
+        match query.await {
+            Ok(directions) => Ok(directions),
             Err(error) => Err(AppError::Database(error)),
         }
     }
@@ -90,10 +115,36 @@ impl RecipeRepository {
         }
     }
 
+    async fn insert_steps_on_recipe(
+        &self,
+        recipe_id: Uuid,
+        directions: Vec<CreateStepDto>,
+        tx: &mut Transaction<'_, Postgres>,
+    ) -> Result<Vec<DbRecipeStep>, AppError> {
+        let mut query_builder: sqlx::QueryBuilder<sqlx::Postgres> = sqlx::QueryBuilder::new(
+            " INSERT INTO kitchen.db_recipe_step (index, instruction, recipe_id) ",
+        );
+
+        query_builder.push_values(directions, |mut b, step| {
+            b.push_bind(step.index)
+                .push_bind(step.instruction)
+                .push_bind(recipe_id);
+        });
+
+        query_builder.push(" RETURNING id, index, instruction, recipe_id");
+
+        let query = query_builder.build_query_as::<DbRecipeStep>();
+
+        match query.fetch_all(&mut **tx).await {
+            Ok(directions) => Ok(directions),
+            Err(error) => Err(AppError::Database(error)),
+        }
+    }
+
     pub async fn create_recipe(
         &self,
         db_recipe: CreateDbRecipe,
-    ) -> Result<(DbRecipe, Vec<DbIngredient>), AppError> {
+    ) -> Result<(DbRecipe, Vec<DbIngredient>, Vec<DbRecipeStep>), AppError> {
         let mut tx: Transaction<'_, Postgres> = self.db_pool.begin().await?;
 
         let CreateDbRecipe {
@@ -102,6 +153,7 @@ impl RecipeRepository {
             prep_time,
             cook_time,
             ingredients,
+            directions,
         } = db_recipe;
         let query = sqlx::query_as!(
             DbRecipe,
@@ -137,9 +189,15 @@ impl RecipeRepository {
         } else {
             vec![]
         };
+        let recipe_directions: Vec<DbRecipeStep> = if directions.len() > 0 {
+            self.insert_steps_on_recipe(recipe.id, directions, &mut tx)
+                .await?
+        } else {
+            vec![]
+        };
 
         tx.commit().await?;
 
-        Ok((recipe, recipe_ingredients))
+        Ok((recipe, recipe_ingredients, recipe_directions))
     }
 }

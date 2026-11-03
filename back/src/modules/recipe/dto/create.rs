@@ -1,14 +1,14 @@
 use serde::{Deserialize, Serialize};
-use validator::Validate;
+use validator::{Validate, ValidationError};
 
-// Custom validation rule: ensure BigDecimal is greater than zero
-// fn validate_positive(val: &BigDecimal) -> Result<(), ValidationError> {
-//     if val > &BigDecimal::from(0) {
-//         Ok(())
-//     } else {
-//         Err(ValidationError::new("must_be_positive"))
-//     }
-// }
+//Custom validation rule: ensure i32 is greater than zero
+fn validate_positive(val: i32) -> Result<(), ValidationError> {
+    if val > 0 {
+        Ok(())
+    } else {
+        Err(ValidationError::new("must_be_positive"))
+    }
+}
 
 #[derive(Serialize, Deserialize, Validate)]
 pub struct CreateIngredientDto {
@@ -18,6 +18,20 @@ pub struct CreateIngredientDto {
         message = "Ingredient description must be 150 characters"
     ))]
     pub description: String,
+}
+
+#[derive(Serialize, Deserialize, Validate)]
+pub struct CreateStepDto {
+    #[validate(length(
+        min = 1,
+        max = 500,
+        message = "Direction step instruction must be 500 characters"
+    ))]
+    pub instruction: String,
+
+    #[validate(range(min = 0, message = "Direction step should be positive"))]
+    #[validate(custom(function = "validate_positive"))]
+    pub index: i32,
 }
 
 #[derive(Serialize, Deserialize, Validate)]

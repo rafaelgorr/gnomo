@@ -12,8 +12,6 @@ pub struct DbRecipeStep {
     #[sqlx_gen(primary_key, column_default = "gen_random_uuid()")]
     pub id: Uuid,
     pub index: i32,
-    pub instruction: Option<String>,
-
-    #[sqlx(rename = "dbRecipeId")]
-    pub db_recipe_id: Uuid,
+    pub instruction: String,
+    pub recipe_id: Uuid,
 }
