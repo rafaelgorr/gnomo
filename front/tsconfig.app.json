@@ -19,17 +19,12 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true,    
+    "noFallthroughCasesInSwitch": true,
     "rootDir": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@kea-inc/transcoding": ["../../packages/modules/transcoding/src/index.ts"],
-      "@kea-inc/transcoding/*": ["../../packages/modules/transcoding/src/*"],
-      "@kea-inc/utils/*": ["../../packages/utils/src/*"],
-      "@kea-inc/uikit/*": ["../../packages/modules/uikit/src/*"],
-      "@kea-inc/reporting-ui": ["../../packages/modules/reporting-ui/index.ts"],
-      "@kea-inc/reporting-ui/*": ["../../packages/modules/reporting-ui/src/*"]
-    },     
+      "@gnomo/uikit/*": ["../shared/uikit/src/*"]
+    }
   },
   "include": ["src"]
 }
