@@ -43,7 +43,6 @@ export default [
           ignoreMemberSort: false,
           memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single'],
           allowSeparatedGroups: false,
-          sem,
         },
       ],
     },

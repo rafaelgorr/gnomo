@@ -1,5 +1,5 @@
 {
-  "name": "uikit",
+  "name": "@gnomo/uikit",
   "private": true,
   "version": "0.0.1",
   "scripts": {
@@ -19,6 +19,7 @@
     "class-variance-authority": "^0.7.1",
     "cn": "^0.5.2",
     "lucide-react": "^1.67.0",
+    "oxc-transform-react": "^0.157.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "shadcn": "^4.23.0",

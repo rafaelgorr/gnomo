@@ -31,4 +31,26 @@ export default defineConfig({
       '@': resolve(import.meta.dirname, './src'),
     },
   },
+  build: {
+    commonjsOptions: {
+      transformMixedEsModules: true,
+    },
+    lib: {
+      entry: resolve(import.meta.dirname, './index.ts'),
+      formats: ['es'],
+      fileName: (ext, entryName) => `${entryName}.${ext}.js`,
+    },
+    rollupOptions: {
+      external: ['react', 'react-dom'],
+      output: {
+        inlineDynamicImports: false,
+        globals: {
+          react: 'React',
+          'react-dom': 'ReactDOM',
+        },
+      },
+    },
+    target: 'esnext',
+    sourcemap: true,
+  },
 })

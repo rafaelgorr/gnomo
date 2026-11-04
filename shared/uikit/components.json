@@ -13,11 +13,11 @@
   "iconLibrary": "lucide",
   "rtl": false,
   "aliases": {
-    "components": "@/components",
-    "utils": "@/lib/utils",
-    "ui": "@/components/ui",
-    "lib": "@/lib",
-    "hooks": "@/hooks"
+    "components": "@gnomo/uikit/components",
+    "utils": "@gnomo/uikit/lib/utils",
+    "ui": "@gnomo/uikit/components/ui",
+    "lib": "@gnomo/uikit/lib",
+    "hooks": "@gnomo/uikit/hooks"
   },
   "menuColor": "default",
   "menuAccent": "subtle",

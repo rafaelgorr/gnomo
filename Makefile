@@ -34,8 +34,7 @@ create-migration:
 .PHONY: build-uikit
 build-uikit:
 	cd shared/uikit && \
-	pnpm exec vite build && \
-	pnpm exec tsc
+	pnpm build
 
 .PHONY: run-front
 run-front:
