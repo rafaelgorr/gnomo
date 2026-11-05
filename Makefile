@@ -2,6 +2,20 @@
 
 DATABASE_URL ?= postgres://test:test@localhost:5434/test
 
+
+.PHONY: build-uikit
+build-uikit:
+	cd shared/uikit && \
+	pnpm build
+
+.PHONY: build-core
+build-core:
+	cd core && \
+	pnpm prisma generate
+
+.PHONY: build-shared
+build-shared: build-uikit build-core
+
 .PHONY: run-back
 run-back:
 	cd back && \
@@ -23,18 +37,15 @@ generate-models:
 
 .PHONY: run-migrations
 run-migrations:
-	cd shared/core && \
+	cd core && \
 	pnpm prisma migrate dev
 
 .PHONY: create-migration
 create-migration:
-	cd shared/core && \
+	cd core && \
 	pnpm prisma migrate dev --create-only
 
-.PHONY: build-uikit
-build-uikit:
-	cd shared/uikit && \
-	pnpm build
+
 
 .PHONY: run-front
 run-front:

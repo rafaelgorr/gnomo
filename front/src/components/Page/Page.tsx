@@ -10,10 +10,7 @@ export function Page(props: PageProps) {
   const { children, className, backgroundPath, ...divProps } = props
 
   return (
-    <div
-      className={cn('flex flex-col w-screen h-screen md:w-full md:h-full relative', className)}
-      {...divProps}
-    >
+    <div className={cn('flex flex-col flex-1 relative', className)} {...divProps}>
       {children}
       {backgroundPath ? (
         <img

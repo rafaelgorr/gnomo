@@ -9,11 +9,16 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.33.2",
+  "packageManager": "pnpm@12.18.0",
   "dependencies": {
     "typescript": "catalog:"
   },
   "devDependencies": {
     "prettier": "catalog:"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@pnpm/exe"
+    ]
   }
 }

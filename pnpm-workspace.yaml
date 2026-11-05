@@ -1,5 +1,6 @@
 packages:
   - front/
+  - core/
   - shared/*
   - tooling/*
   - "!**/dist/**"
@@ -17,5 +18,6 @@ catalog:
   vite: ^8.3.5
 
 allowBuilds:
-  "@prisma/engines": false
+  "@prisma/engines": true
+  esbuild: true
   prisma: true

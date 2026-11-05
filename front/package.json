@@ -10,13 +10,19 @@
   },
   "dependencies": {
     "@gnomo/uikit": "workspace:*",
+    "@reduxjs/toolkit": "^2.14.0",
     "@tailwindcss/vite": "^4.3.4",
     "@tanstack/react-router": "^1.170.46",
     "@tanstack/react-router-devtools": "^1.167.2",
+    "axios": "^1.21.0",
+    "camelcase-keys": "^10.0.3",
     "lucide": "^1.68.0",
     "lucide-react": "^1.67.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
+    "react-redux": "^9.3.1",
+    "redux-logger": "^3.0.6",
+    "snakecase-keys": "^9.0.2",
     "tailwindcss": "^4.3.4"
   },
   "devDependencies": {
@@ -30,6 +36,7 @@
     "@types/node": "catalog:",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "@types/redux-logger": "^3.0.13",
     "@vitejs/plugin-react": "^6.0.1",
     "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "catalog:",
