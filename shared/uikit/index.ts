@@ -2,8 +2,8 @@ export { ThemeProvider, useTheme } from './src/components/theme-provider'
 export { Button, buttonVariants } from './src/components/ui/button'
 export {
   Collapsible,
-  CollapsibleTrigger,
   CollapsibleContent,
+  CollapsibleTrigger,
 } from './src/components/ui/collapsible'
 export {
   DropdownMenu,
@@ -61,6 +61,7 @@ export {
   useSidebar,
 } from './src/components/ui/sidebar'
 export { Skeleton } from './src/components/ui/skeleton'
+export { Spinner } from './src/components/ui/spinner'
 export {
   Tooltip,
   TooltipTrigger,
