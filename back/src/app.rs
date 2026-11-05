@@ -1,4 +1,10 @@
-use axum::Router;
+use axum::{
+    Router,
+    http::{
+        HeaderValue, Method,
+        header::{AUTHORIZATION, CONTENT_TYPE},
+    },
+};
 use sqlx::{Pool, Postgres};
 
 use std::net::SocketAddr;
@@ -8,6 +14,8 @@ use crate::{
     utils::shutdown_signal::shutdown_signal,
 };
 
+use tower_http::cors::CorsLayer;
+
 pub async fn create_app(db_pool: &Pool<Postgres>) -> Router {
     // initialize tracing
     // tracing_subscriber::fmt::init();
@@ -16,15 +24,27 @@ pub async fn create_app(db_pool: &Pool<Postgres>) -> Router {
         recipe_service: modules::recipe::get_recipe_module(db_pool.clone()),
     };
 
-    // build our application with a route
-    let app = Router::new()
-        .merge(modules::recipe::routes::router())
-        .with_state(app_state)
-        .fallback(fallback_handler);
+    let allowed_origin = "http://localhost:3030"
+        .parse::<HeaderValue>()
+        .expect("Invalid origin header value");
+
+    // 2. Build the CORS middleware layer
+    let cors = CorsLayer::new()
+        // Explicitly allow Vite's server
+        .allow_origin(allowed_origin)
+        // Axios sends standard methods like GET, POST, etc.
+        .allow_methods([Method::GET, Method::POST, Method::PUT, Method::DELETE])
+        // Axios often specifies content type (e.g., application/json)
+        // and Authorization headers if you pass tokens
+        .allow_headers([CONTENT_TYPE, AUTHORIZATION]);
 
     // println!("Database disconnected!");
 
-    app.clone()
+    Router::new()
+        .merge(modules::recipe::routes::router())
+        .with_state(app_state)
+        .fallback(fallback_handler)
+        .layer(cors)
 }
 
 pub async fn setup_app_server(db_pool: &Pool<Postgres>, app: Router) {

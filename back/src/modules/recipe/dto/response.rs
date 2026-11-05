@@ -74,3 +74,8 @@ impl From<RecipeAggragate> for RecipeDto {
         }
     }
 }
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct GetRecipe {
+    pub recipes: Vec<RecipeDto>,
+}

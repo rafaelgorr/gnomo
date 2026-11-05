@@ -8,12 +8,12 @@ use crate::{
     app_error::AppError,
     app_state::AppState,
     models::{db_ingredient::DbIngredient, db_recipe_step::DbRecipeStep},
-    modules::recipe::dto::response::{RecipeAggragate, RecipeDto},
+    modules::recipe::dto::response::{GetRecipe, RecipeAggragate, RecipeDto},
 };
 
 use super::contract::CreateRecipeRequest;
 
-pub async fn get_recipes(State(state): State<AppState>) -> Result<Json<Vec<RecipeDto>>, AppError> {
+pub async fn get_recipes(State(state): State<AppState>) -> Result<Json<GetRecipe>, AppError> {
     let recipes = state.recipe_service.get_recipes().await;
     let recipe_ids = recipes.iter().map(|recipe| recipe.id).collect();
 
@@ -74,7 +74,7 @@ pub async fn get_recipes(State(state): State<AppState>) -> Result<Json<Vec<Recip
         })
         .collect();
 
-    Ok(Json(response))
+    Ok(Json(GetRecipe { recipes: response }))
 }
 
 pub async fn create_recipe(
