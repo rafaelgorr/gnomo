@@ -1,0 +1,9 @@
+datasource db {
+  provider = "postgresql"
+  schemas  = ["kitchen"]
+}
+
+generator client {
+  provider = "prisma-client"
+  output   = "../../generated/prisma"
+}
