@@ -15,10 +15,5 @@
   },
   "devDependencies": {
     "prettier": "catalog:"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@pnpm/exe"
-    ]
   }
 }

@@ -23,6 +23,7 @@ export {
   DropdownMenuTrigger,
 } from './src/components/ui/dropdown-menu'
 export { Input } from './src/components/ui/input'
+export { Label } from './src/components/ui/label'
 export { Separator } from './src/components/ui/separator'
 export {
   Sheet,

@@ -8,18 +8,34 @@ build-uikit:
 	cd shared/uikit && \
 	pnpm build
 
+.PHONY: build-contracts
+build-contracts:
+	cd shared/contracts && \
+	pnpm create-main && \
+	tsp compile .
+
+.PHONY: generate-contracts
+generate-contracts: build-contracts
+	cd shared/contracts && \
+	./generate-contract-types.sh
+
+.PHONY: build-shared
+build-shared: build-uikit
+
 .PHONY: build-core
 build-core:
 	cd core && \
 	pnpm prisma generate
 
-.PHONY: build-shared
-build-shared: build-uikit build-core
-
 .PHONY: run-back
-run-back:
+run-back: build-core generate-contracts
 	cd back && \
 	cargo run
+
+.PHONY: build-back
+build-back: build-core
+	cd back && \
+	cargo build
 
 .PHONY: test-back
 test-back:
@@ -44,8 +60,6 @@ run-migrations:
 create-migration:
 	cd core && \
 	pnpm prisma migrate dev --create-only
-
-
 
 .PHONY: run-front
 run-front:

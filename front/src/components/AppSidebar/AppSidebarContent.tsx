@@ -1,8 +1,8 @@
 import {
-  Button,
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
+  Label,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -12,7 +12,7 @@ import {
   useSidebar,
 } from '@gnomo/uikit'
 import { ChevronDownIcon, ChevronRightIcon } from 'lucide-react'
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 const data = {
   versions: ['1.0.1', '1.1.0-alpha', '2.0.0-beta1'],
@@ -34,15 +34,6 @@ const data = {
   ],
 } as const
 
-const CollapsibleButtonIcon = (props: React.ComponentProps<typeof Button>) => {
-  const { children, ...buttonProps } = props
-  return (
-    <Button {...buttonProps} size="icon" variant="ghost">
-      {children}
-    </Button>
-  )
-}
-
 export function AppSidebarContent() {
   const { toggleSidebar, isMobile } = useSidebar()
 
@@ -51,16 +42,12 @@ export function AppSidebarContent() {
   return data.navMain.map((item) => (
     <Collapsible key={item.title} open={open} onOpenChange={setOpen}>
       <SidebarGroup>
-        <SidebarGroupLabel
-          render={
-            <CollapsibleTrigger className="flex justify-between">
-              {item.title}
-              <CollapsibleButtonIcon>
-                {open ? <ChevronDownIcon /> : <ChevronRightIcon />}
-              </CollapsibleButtonIcon>
-            </CollapsibleTrigger>
-          }
-        />
+        <SidebarGroupLabel className="flex justify-between">
+          <Label htmlFor="item-title">{item.title}</Label>
+          <CollapsibleTrigger id="item-title" className="size-4">
+            {open ? <ChevronDownIcon size={16} /> : <ChevronRightIcon size={16} />}
+          </CollapsibleTrigger>
+        </SidebarGroupLabel>
         <CollapsibleContent>
           <SidebarGroupContent className="ml-3 border-l">
             <SidebarMenu>
