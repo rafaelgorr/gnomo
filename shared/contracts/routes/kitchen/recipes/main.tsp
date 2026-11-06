@@ -6,7 +6,7 @@ using Http;
 
 namespace Kitchen;
 
-@route("/recipes")
+@route("/api/kitchen/recipes")
 interface Recipes {
   @get
   list(): GetRecipesResponse;

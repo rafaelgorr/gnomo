@@ -2,9 +2,10 @@
 set -euo pipefail
 
 INPUT_DIR="./tsp-output/@typespec/openapi3"
-OUTPUT_DIR="../../back/src/generated/contracts"
+BACK_OUTPUT_DIR="../../back/src/generated/contracts"
+FRONT_OUTPUT_DIR="../../front/src/api/generated/contracts"
 
-mkdir -p "$OUTPUT_DIR"
+mkdir -p "$BACK_OUTPUT_DIR"
 
 # Generate Rust contracts
 for file in "$INPUT_DIR"/openapi.*.yaml; do
@@ -20,18 +21,24 @@ for file in "$INPUT_DIR"/openapi.*.yaml; do
 
     omg \
         -i "$file" \
-        -o "$OUTPUT_DIR/$module" \
+        -o "$BACK_OUTPUT_DIR/$module" \
         -m all
+
+    echo "Generating TypeScript client: $module"
+
+    npx openapi-typescript \
+        "$file" \
+        -o "$FRONT_OUTPUT_DIR/${module}.d.ts"
 done
 
 # Generate mod.rs
 {
-    for dir in "$OUTPUT_DIR"/*/; do
+    for dir in "$BACK_OUTPUT_DIR"/*/; do
         [ -d "$dir" ] || continue
 
         module=$(basename "$dir")
         echo "pub mod $module;"
     done
-} > "$OUTPUT_DIR/mod.rs"
+} > "$BACK_OUTPUT_DIR/mod.rs"
 
 echo "Contracts generated successfully!"

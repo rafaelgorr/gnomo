@@ -16,5 +16,8 @@
     "@typespec/rest": "^0.87.0",
     "tsx": "catalog:"
   },
-  "prettier": "@tooling/prettier"
+  "prettier": "@tooling/prettier",
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.42.0"
+  }
 }

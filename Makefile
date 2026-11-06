@@ -17,7 +17,9 @@ build-contracts:
 .PHONY: generate-contracts
 generate-contracts: build-contracts
 	cd shared/contracts && \
-	./generate-contract-types.sh
+	./generate-contract-types.sh && \
+	cd ../../ && \
+	pnpm prettier --write front/src/api/generated/contracts/*.ts
 
 .PHONY: build-shared
 build-shared: build-uikit

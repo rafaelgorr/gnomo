@@ -1,4 +1,5 @@
 import { api } from '.'
+import type { GetRecipesResponse } from './types'
 
 export type GetRecipes = {
   input: void
@@ -6,7 +7,7 @@ export type GetRecipes = {
 }
 
 export const getRecipes = async (): Promise<GetRecipes['output']> => {
-  const { data } = await api.get<{ recipes: { id: string; name: string }[] }>('/api/recipes')
+  const { data } = await api.get<GetRecipesResponse>('/api/kitchen/recipes')
 
   return data.recipes
 }

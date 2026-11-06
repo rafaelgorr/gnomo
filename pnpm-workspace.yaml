@@ -18,6 +18,7 @@ catalog:
   vite: ^8.3.5
 
 allowBuilds:
+  '@openapitools/openapi-generator-cli': false
   "@prisma/engines": true
   esbuild: true
   prisma: true
