@@ -53,7 +53,7 @@ async fn create_recipe(pool: Pool<Postgres>) -> sqlx::Result<()> {
 
     let request = Request::builder()
         .method(http::Method::POST)
-        .uri("/api/recipe")
+        .uri("/api/kitchen/recipe")
         .header(http::header::CONTENT_TYPE, "application/json")
         .body(Body::from(payload))
         .unwrap();

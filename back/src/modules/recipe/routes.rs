@@ -9,8 +9,8 @@ use super::handler::{get::get_recipes, post::create_recipe};
 
 pub fn router() -> Router<AppState> {
     let api_routes: Router<AppState> = Router::new()
-        .route("/recipes", get(get_recipes))
-        .route("/recipe", post(create_recipe));
+        .route("/kitchen/recipes", get(get_recipes))
+        .route("/kitchen/recipe", post(create_recipe));
 
     Router::new().nest("/api", api_routes)
 }

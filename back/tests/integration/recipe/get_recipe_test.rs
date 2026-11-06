@@ -60,7 +60,7 @@ async fn get_recipe(pool: Pool<Postgres>) -> sqlx::Result<()> {
 
     let request = Request::builder()
         .method(http::Method::GET)
-        .uri("/api/recipes")
+        .uri("/api/kitchen/recipes")
         .body(Body::empty())
         .unwrap();
 
