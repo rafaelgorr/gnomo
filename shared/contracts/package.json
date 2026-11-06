@@ -1,0 +1,20 @@
+{
+  "name": "@gnomo/contracts",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "create-main": "tsx create-main-file.mts"
+  },
+  "dependencies": {
+    "@tooling/eslint": "workspace:*",
+    "@tooling/prettier": "workspace:*",
+    "@typespec/compiler": "^1.17.0",
+    "@typespec/http": "^1.17.0",
+    "@typespec/openapi": "^1.17.0",
+    "@typespec/openapi3": "^1.17.0",
+    "@typespec/rest": "^0.87.0",
+    "tsx": "catalog:"
+  },
+  "prettier": "@tooling/prettier"
+}
