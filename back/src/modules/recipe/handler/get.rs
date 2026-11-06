@@ -2,24 +2,24 @@ use std::collections::HashMap;
 
 use axum::{Json, extract::State};
 use uuid::Uuid;
-use validator::Validate;
 
 use crate::{
     app_error::AppError,
     app_state::AppState,
+    contracts::kitchen::models::{GetRecipesResponse, RecipeOutput},
     models::{db_ingredient::DbIngredient, db_recipe_step::DbRecipeStep},
-    modules::recipe::dto::response::{GetRecipe, RecipeAggragate, RecipeDto},
+    modules::recipe::dto::response::RecipeAggragate,
 };
 
-use super::contract::CreateRecipeRequest;
-
-pub async fn get_recipes(State(state): State<AppState>) -> Result<Json<GetRecipe>, AppError> {
+pub async fn get_recipes(
+    State(state): State<AppState>,
+) -> Result<Json<GetRecipesResponse>, AppError> {
     let recipes = state.recipe_service.get_recipes().await;
     let recipe_ids = recipes.iter().map(|recipe| recipe.id).collect();
 
     let future_ingredients = state.recipe_service.get_ingredients_by_recipes(&recipe_ids);
 
-    let ingredients = match future_ingredients.await {
+    let ingredients: Vec<DbIngredient> = match future_ingredients.await {
         Ok(result) => result,
         Err(error) => return Err(error),
     };
@@ -66,7 +66,7 @@ pub async fn get_recipes(State(state): State<AppState>) -> Result<Json<GetRecipe
                 .remove(&recipe.id)
                 .unwrap_or_default();
 
-            RecipeDto::from(RecipeAggragate {
+            RecipeOutput::from(RecipeAggragate {
                 recipe,
                 ingredients,
                 directions,
@@ -74,34 +74,5 @@ pub async fn get_recipes(State(state): State<AppState>) -> Result<Json<GetRecipe
         })
         .collect();
 
-    Ok(Json(GetRecipe { recipes: response }))
-}
-
-pub async fn create_recipe(
-    State(state): State<AppState>,
-    Json(request): Json<CreateRecipeRequest>,
-) -> Result<Json<RecipeDto>, AppError> {
-    match request.validate() {
-        Ok(_) => {
-            let CreateRecipeRequest {
-                recipe,
-                ingredients,
-                directions,
-            } = request;
-
-            let (recipe, ingredients, directions) = state
-                .recipe_service
-                .create_recipe((recipe, ingredients, directions))
-                .await?;
-
-            let response = RecipeDto::from(RecipeAggragate {
-                recipe,
-                ingredients,
-                directions,
-            });
-
-            Ok(Json(response))
-        }
-        Err(error) => Err(AppError::ValidationError(error.to_string())),
-    }
+    Ok(Json(GetRecipesResponse { recipes: response }))
 }

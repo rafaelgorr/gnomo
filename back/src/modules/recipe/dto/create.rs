@@ -1,5 +1,6 @@
-use serde::{Deserialize, Serialize};
 use validator::{Validate, ValidationError};
+
+use crate::contracts::kitchen::models::CreateRecipeRequest;
 
 //Custom validation rule: ensure i32 is greater than zero
 fn validate_positive(val: i32) -> Result<(), ValidationError> {
@@ -10,7 +11,7 @@ fn validate_positive(val: i32) -> Result<(), ValidationError> {
     }
 }
 
-#[derive(Serialize, Deserialize, Validate)]
+#[derive(Validate)]
 pub struct CreateIngredientDto {
     #[validate(length(
         min = 1,
@@ -20,7 +21,7 @@ pub struct CreateIngredientDto {
     pub description: String,
 }
 
-#[derive(Serialize, Deserialize, Validate)]
+#[derive(Validate)]
 pub struct CreateStepDto {
     #[validate(length(
         min = 1,
@@ -34,7 +35,7 @@ pub struct CreateStepDto {
     pub index: i32,
 }
 
-#[derive(Serialize, Deserialize, Validate)]
+#[derive(Validate)]
 pub struct CreateRecipeDto {
     #[validate(length(min = 1, max = 25, message = "Recipe name must be 25 characters"))]
     pub name: String,
@@ -51,4 +52,39 @@ pub struct CreateRecipeDto {
 
     #[validate(range(min = 1, message = "Recipe cook time should be positive"))]
     pub cook_time: i32,
+}
+
+#[derive(Validate)]
+pub struct CreateRecipeRequestDto {
+    pub recipe: CreateRecipeDto,
+    pub ingredients: Vec<CreateIngredientDto>,
+    pub directions: Vec<CreateStepDto>,
+}
+
+impl From<CreateRecipeRequest> for CreateRecipeRequestDto {
+    fn from(value: CreateRecipeRequest) -> Self {
+        Self {
+            recipe: CreateRecipeDto {
+                name: value.recipe.name,
+                description: value.recipe.description,
+                cook_time: value.recipe.cook_time as i32,
+                prep_time: value.recipe.prep_time as i32,
+            },
+            ingredients: value
+                .ingredients
+                .iter()
+                .map(|ingredient| CreateIngredientDto {
+                    description: ingredient.description.clone(),
+                })
+                .collect(),
+            directions: value
+                .directions
+                .iter()
+                .map(|step| CreateStepDto {
+                    index: step.index as i32,
+                    instruction: step.instruction.clone(),
+                })
+                .collect(),
+        }
+    }
 }

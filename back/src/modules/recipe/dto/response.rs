@@ -1,51 +1,9 @@
-use serde::{Deserialize, Serialize};
-use uuid::Uuid;
+use serde::Serialize;
 
+use crate::contracts::kitchen::models::{Ingredient, RecipeOutput, RecipeStep};
 use crate::models::db_ingredient::DbIngredient;
 use crate::models::db_recipe::DbRecipe;
 use crate::models::db_recipe_step::DbRecipeStep;
-
-#[derive(Debug, Deserialize, Serialize)]
-pub struct IngredientDto {
-    pub id: Uuid,
-    pub description: String,
-}
-
-impl From<DbIngredient> for IngredientDto {
-    fn from(ingredient: DbIngredient) -> Self {
-        Self {
-            id: ingredient.id,
-            description: ingredient.description,
-        }
-    }
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-pub struct StepDto {
-    pub id: Uuid,
-    pub index: i32,
-    pub instruction: String,
-}
-
-impl From<DbRecipeStep> for StepDto {
-    fn from(step: DbRecipeStep) -> Self {
-        Self {
-            id: step.id,
-            index: step.index,
-            instruction: step.instruction,
-        }
-    }
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-pub struct RecipeDto {
-    pub id: Uuid,
-    pub name: String,
-    pub description: Option<String>,
-    pub created_at: chrono::NaiveDateTime,
-    pub ingredients: Vec<IngredientDto>,
-    pub directions: Vec<StepDto>,
-}
 
 #[derive(Debug, Serialize)]
 pub struct RecipeAggragate {
@@ -54,28 +12,44 @@ pub struct RecipeAggragate {
     pub directions: Vec<DbRecipeStep>,
 }
 
-impl From<RecipeAggragate> for RecipeDto {
-    fn from(values: RecipeAggragate) -> Self {
+impl From<DbIngredient> for Ingredient {
+    fn from(value: DbIngredient) -> Self {
         Self {
-            id: values.recipe.id,
-            name: values.recipe.name,
-            description: values.recipe.description,
-            created_at: values.recipe.created_at,
-            ingredients: values
-                .ingredients
-                .into_iter()
-                .map(|ingredient| IngredientDto::from(ingredient))
-                .collect(),
-            directions: values
-                .directions
-                .into_iter()
-                .map(|step| StepDto::from(step))
-                .collect(),
+            id: value.id.to_string(),
+            description: value.description,
         }
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
-pub struct GetRecipe {
-    pub recipes: Vec<RecipeDto>,
+impl From<DbRecipeStep> for RecipeStep {
+    fn from(value: DbRecipeStep) -> Self {
+        Self {
+            id: value.id.to_string(),
+            index: value.index as i64,
+            instruction: value.instruction,
+        }
+    }
+}
+
+impl From<RecipeAggragate> for RecipeOutput {
+    fn from(value: RecipeAggragate) -> Self {
+        Self {
+            id: value.recipe.id.to_string(),
+            name: value.recipe.name,
+            description: value.recipe.description,
+            cook_time: value.recipe.cook_time as i64,
+            prep_time: value.recipe.prep_time as i64,
+            created_at: value.recipe.created_at.and_utc(),
+            ingredients: value
+                .ingredients
+                .into_iter()
+                .map(|ingredient| Ingredient::from(ingredient))
+                .collect(),
+            directions: value
+                .directions
+                .into_iter()
+                .map(|step| RecipeStep::from(step))
+                .collect(),
+        }
+    }
 }

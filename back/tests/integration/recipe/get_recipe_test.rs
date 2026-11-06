@@ -2,12 +2,12 @@ use axum::{
     body::Body,
     http::{self, Request, StatusCode},
 };
-use back::modules::recipe::{
-    dto::{
-        create::{CreateIngredientDto, CreateRecipeDto, CreateStepDto},
-        response::RecipeDto,
+use back::{
+    contracts::kitchen::models::GetRecipesResponse,
+    modules::recipe::{
+        dto::create::{CreateIngredientDto, CreateRecipeDto, CreateStepDto},
+        repository::{repository::RecipeRepository, structs::CreateDbRecipe},
     },
-    repository::{repository::RecipeRepository, structs::CreateDbRecipe},
 };
 use sqlx::{Pool, Postgres};
 use tower::ServiceExt;
@@ -60,7 +60,7 @@ async fn get_recipe(pool: Pool<Postgres>) -> sqlx::Result<()> {
 
     let request = Request::builder()
         .method(http::Method::GET)
-        .uri("/recipes")
+        .uri("/api/recipes")
         .body(Body::empty())
         .unwrap();
 
@@ -75,11 +75,14 @@ async fn get_recipe(pool: Pool<Postgres>) -> sqlx::Result<()> {
         .unwrap();
 
     // 5. Deserialize bytes directly into Vec<UserDto>
-    let dtos: Vec<RecipeDto> = serde_json::from_slice(&body_bytes).unwrap();
-    assert_eq!(dtos.len(), 1);
-    assert_eq!(dtos.first().unwrap().id, recipe.id);
-    assert_eq!(dtos.first().unwrap().name, recipe.name);
-    assert_eq!(dtos.first().unwrap().description, recipe.description);
+    let response: GetRecipesResponse = serde_json::from_slice(&body_bytes).unwrap();
+    assert_eq!(response.recipes.len(), 1);
+    assert_eq!(response.recipes.first().unwrap().id, recipe.id.to_string());
+    assert_eq!(response.recipes.first().unwrap().name, recipe.name);
+    assert_eq!(
+        response.recipes.first().unwrap().description,
+        recipe.description
+    );
 
     assert_eq!(ingredients.len(), 2);
 

@@ -1,2 +1,2 @@
-pub mod contract;
-pub mod handler;
+pub mod get;
+pub mod post;

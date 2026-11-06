@@ -5,7 +5,7 @@ use axum::{
 
 use crate::app_state::AppState;
 
-use super::handler::handler::{create_recipe, get_recipes};
+use super::handler::{get::get_recipes, post::create_recipe};
 
 pub fn router() -> Router<AppState> {
     let api_routes: Router<AppState> = Router::new()

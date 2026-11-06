@@ -2,13 +2,11 @@ use axum::{
     body::Body,
     http::{self, Request, StatusCode},
 };
-use back::modules::recipe::{
-    dto::{
-        create::{CreateIngredientDto, CreateRecipeDto, CreateStepDto},
-        response::RecipeDto,
-    },
-    handler::contract::CreateRecipeRequest,
+use back::contracts::kitchen::models::{
+    CreateIngredientInput, CreateRecipeInput, CreateRecipeRequest, CreateRecipeStepInput,
+    RecipeOutput,
 };
+use chrono::Utc;
 use sqlx::{Pool, Postgres};
 use tower::ServiceExt;
 
@@ -20,26 +18,27 @@ async fn create_recipe(pool: Pool<Postgres>) -> sqlx::Result<()> {
 
     let recipe_name = "New recipe".to_string();
     let recipe_description = "New recipe description".to_string();
-    let recipe = CreateRecipeDto {
+    let recipe = CreateRecipeInput {
         name: recipe_name.clone(),
         description: Some(recipe_description.clone()),
         prep_time: 30,
         cook_time: 30,
+        created_at: Utc::now(),
     };
 
-    let ingredient_1 = CreateIngredientDto {
+    let ingredient_1 = CreateIngredientInput {
         description: "1/4 cup water".to_string(),
     };
 
-    let ingredient_2 = CreateIngredientDto {
+    let ingredient_2 = CreateIngredientInput {
         description: "1 (16-ounce) container cottage cheese".to_string(),
     };
 
-    let step_1: CreateStepDto = CreateStepDto {
+    let step_1 = CreateRecipeStepInput {
         instruction: "Heat 2 tablespoons oil in a large".to_string(),
         index: 0,
     };
-    let step_2: CreateStepDto = CreateStepDto {
+    let step_2 = CreateRecipeStepInput {
         instruction: "Heat remaining 2 tablespoons oil in the same skillet over medium-high heat."
             .to_string(),
         index: 1,
@@ -54,7 +53,7 @@ async fn create_recipe(pool: Pool<Postgres>) -> sqlx::Result<()> {
 
     let request = Request::builder()
         .method(http::Method::POST)
-        .uri("/recipe")
+        .uri("/api/recipe")
         .header(http::header::CONTENT_TYPE, "application/json")
         .body(Body::from(payload))
         .unwrap();
@@ -69,7 +68,7 @@ async fn create_recipe(pool: Pool<Postgres>) -> sqlx::Result<()> {
         .await
         .unwrap();
 
-    let created_recipe: RecipeDto = serde_json::from_slice(&body_bytes).unwrap();
+    let created_recipe: RecipeOutput = serde_json::from_slice(&body_bytes).unwrap();
     assert_eq!(created_recipe.name, recipe_name);
     assert_eq!(created_recipe.description, Some(recipe_description));
 

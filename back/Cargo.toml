@@ -29,3 +29,4 @@ tracing = "0.1.44"
 validator = { version = "0.21", features = ["derive"] }
 tower = { version = "0.5.3", features = ["util"] }
 tower-http = { version = "0.7.1", features = ["cors"] }
+openapi-model-generator = "0.6.3"
