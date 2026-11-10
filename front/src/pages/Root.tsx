@@ -1,5 +1,6 @@
 import { Outlet } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
+
 import { AppSidebar } from '../components/AppSidebar/AppSidebar'
 import { MobileSidebarTrigger } from './MobileSidebarTrigger'
 

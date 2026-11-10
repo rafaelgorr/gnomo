@@ -1,9 +1,8 @@
 import { SidebarProvider } from '@gnomo/uikit'
-
 import { createRouter, RouterProvider } from '@tanstack/react-router'
-
 // Import the generated route tree
 import { Provider } from 'react-redux'
+
 import { routeTree } from './routeTree.gen'
 import { store } from './store'
 

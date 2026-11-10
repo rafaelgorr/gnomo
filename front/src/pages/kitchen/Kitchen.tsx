@@ -1,8 +1,10 @@
+import { Spinner } from '@gnomo/uikit'
+import { useEffect } from 'react'
+
 import gnomeChef from '@/assets/gnome_chef.png'
 import { Page } from '@/components/Page'
 import { useAppDispatch } from '@/store/hooks'
-import { Spinner } from '@gnomo/uikit'
-import { useEffect } from 'react'
+
 import { useConnector } from './connector'
 
 export function Kitchen() {

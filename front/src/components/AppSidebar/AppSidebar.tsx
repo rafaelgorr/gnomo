@@ -1,7 +1,8 @@
 import { cn, Sidebar, SidebarContent, SidebarTrigger, useSidebar } from '@gnomo/uikit'
+import { Link } from '@tanstack/react-router'
 
 import gnome from '@/assets/gnome.png'
-import { Link } from '@tanstack/react-router'
+
 import { AppSidebarContent } from './AppSidebarContent'
 
 export function AppSidebar() {

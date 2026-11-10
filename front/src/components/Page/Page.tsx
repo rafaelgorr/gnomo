@@ -1,5 +1,6 @@
 import { cn } from '@gnomo/uikit'
 import type React from 'react'
+
 import { Title } from './Title'
 
 type PageProps = React.ComponentProps<'div'> & {

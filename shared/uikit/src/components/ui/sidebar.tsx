@@ -2,10 +2,6 @@
 
 import { mergeProps } from '@base-ui/react/merge-props'
 import { useRender } from '@base-ui/react/use-render'
-import { cva, type VariantProps } from 'class-variance-authority'
-import { cn } from 'cn'
-import * as React from 'react'
-
 import { Button } from '@gnomo/uikit/components/ui/button'
 import { Input } from '@gnomo/uikit/components/ui/input'
 import { Separator } from '@gnomo/uikit/components/ui/separator'
@@ -19,7 +15,10 @@ import {
 import { Skeleton } from '@gnomo/uikit/components/ui/skeleton'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@gnomo/uikit/components/ui/tooltip'
 import { useIsMobile } from '@gnomo/uikit/hooks/use-mobile'
+import { cva, type VariantProps } from 'class-variance-authority'
+import { cn } from 'cn'
 import { PanelLeftIcon } from 'lucide-react'
+import * as React from 'react'
 
 const SIDEBAR_COOKIE_NAME = 'sidebar_state'
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7

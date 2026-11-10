@@ -1,5 +1,7 @@
-import type { StoreState } from '@/store'
 import { createSelector } from '@reduxjs/toolkit'
+
+import type { StoreState } from '@/store'
+
 import type { State } from './slice'
 
 export const isFetching = createSelector(

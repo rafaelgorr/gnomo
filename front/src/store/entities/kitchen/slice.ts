@@ -1,5 +1,6 @@
+import { createEntityAdapter, createSlice, type EntityState } from '@reduxjs/toolkit'
+
 import { kitchenActions } from '@/store/feature/kitchen/actions'
-import { type EntityState, createEntityAdapter, createSlice } from '@reduxjs/toolkit'
 
 export const adapter = createEntityAdapter<{ id: string; name: string }>({
   sortComparer: (a, b) => a.name.localeCompare(b.name),

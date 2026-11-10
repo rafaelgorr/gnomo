@@ -1,8 +1,8 @@
-import { combineReducers, configureStore, type Action, type Reducer } from '@reduxjs/toolkit'
-import { errorMiddleware, printMiddleware } from './middlewares'
+import { type Action, combineReducers, configureStore, type Reducer } from '@reduxjs/toolkit'
 
-import entities, { initialState as entitiesInitialState, type EntitiesState } from './entities'
-import feature, { initialState as featureInitialState, type FeatureState } from './feature'
+import entities, { type EntitiesState, initialState as entitiesInitialState } from './entities'
+import feature, { type FeatureState, initialState as featureInitialState } from './feature'
+import { errorMiddleware, printMiddleware } from './middlewares'
 
 export type StoreState = {
   entities: EntitiesState

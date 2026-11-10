@@ -65,9 +65,9 @@ export { Skeleton } from './src/components/ui/skeleton'
 export { Spinner } from './src/components/ui/spinner'
 export {
   Tooltip,
-  TooltipTrigger,
   TooltipContent,
   TooltipProvider,
+  TooltipTrigger,
 } from './src/components/ui/tooltip'
 export { useIsMobile } from './src/hooks/use-mobile'
 export { cn } from './src/lib/utils'

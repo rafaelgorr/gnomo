@@ -1,5 +1,6 @@
 import { combineReducers } from '@reduxjs/toolkit'
-import { reducer as kitchen, initialState as kitchenState } from './kitchen'
+
+import { initialState as kitchenState, reducer as kitchen } from './kitchen'
 
 export const initialState = {
   kitchen: kitchenState,

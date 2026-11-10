@@ -1,5 +1,6 @@
-import * as kitchenApi from '@/api/kitchen'
 import { createAsyncThunk } from '@reduxjs/toolkit'
+
+import * as kitchenApi from '@/api/kitchen'
 
 export const prefix = 'features/kitchen'
 

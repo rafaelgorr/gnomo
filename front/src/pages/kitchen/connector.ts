@@ -1,5 +1,5 @@
 import { selectors as entitiesSelectors } from '@/store/entities/kitchen'
-import { selectors as featureSelectors, kitchenActions } from '@/store/feature/kitchen'
+import { kitchenActions, selectors as featureSelectors } from '@/store/feature/kitchen'
 import { useAppSelector } from '@/store/hooks'
 
 export const useConnector = () => {
