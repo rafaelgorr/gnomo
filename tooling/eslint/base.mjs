@@ -1,5 +1,6 @@
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 import unusedImports from 'eslint-plugin-unused-imports'
+import simpleImportSort from 'eslint-plugin-simple-import-sort'
 
 /**
  * @type {import('typescript-eslint').Config}
@@ -31,20 +32,18 @@ export default [
       'playwright.config.mts',
       'routeTree.gen.ts',
       '**/generated/prisma/*',
+      'base.mjs',
+      'web.mjs',
     ],
   },
   {
+    files: ['**/*.{ts,tsx,js,jsx}'],
     plugins: {
-      'sort-imports': [
-        'error',
-        {
-          ignoreCase: false,
-          ignoreDeclarationSort: false,
-          ignoreMemberSort: false,
-          memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single'],
-          allowSeparatedGroups: false,
-        },
-      ],
+      'simple-import-sort': simpleImportSort,
+    },
+    rules: {
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
     },
   },
   {
