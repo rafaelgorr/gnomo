@@ -23,6 +23,18 @@ export {
   DropdownMenuTrigger,
 } from './src/components/ui/dropdown-menu'
 export { Input } from './src/components/ui/input'
+export {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemFooter,
+  ItemGroup,
+  ItemHeader,
+  ItemMedia,
+  ItemSeparator,
+  ItemTitle,
+} from './src/components/ui/item'
 export { Label } from './src/components/ui/label'
 export { Separator } from './src/components/ui/separator'
 export {

@@ -23,7 +23,7 @@ const data = {
       items: [
         {
           title: 'Receitas',
-          url: '/kitchen',
+          url: '/kitchen/recipes',
         },
         {
           title: 'Ranking',

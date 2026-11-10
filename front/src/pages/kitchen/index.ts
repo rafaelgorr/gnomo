@@ -1,1 +1,1 @@
-export * from './Kitchen'
+export * from './Recipes'

@@ -5,3 +5,7 @@ import { adapter } from './slice'
 export const getRecipes = adapter.getSelectors<StoreState>(
   (state) => state.entities.kitchen.recipes,
 ).selectAll
+
+export const getRecipe = adapter.getSelectors<StoreState>(
+  (state) => state.entities.kitchen.recipes,
+).selectById

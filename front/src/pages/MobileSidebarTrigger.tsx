@@ -5,7 +5,10 @@ export function MobileSidebarTrigger() {
   const { toggleSidebar } = useSidebar()
 
   return (
-    <div onClick={toggleSidebar} className="flex gap-1 items-center md:hidden">
+    <div
+      onClick={toggleSidebar}
+      className="z-10 flex gap-1 items-center md:hidden absolute top-4 left-4"
+    >
       <Button size="icon-lg" variant="ghost">
         <MenuIcon />
       </Button>

@@ -1,13 +1,14 @@
 import { createEntityAdapter, createSlice, type EntityState } from '@reduxjs/toolkit'
 
+import type { Recipe } from '@/domain'
 import { kitchenActions } from '@/store/feature/kitchen/actions'
 
-export const adapter = createEntityAdapter<{ id: string; name: string }>({
+export const adapter = createEntityAdapter<Recipe>({
   sortComparer: (a, b) => a.name.localeCompare(b.name),
 })
 
 export type State = {
-  recipes: EntityState<{ id: string; name: string }, string>
+  recipes: EntityState<Recipe, string>
 }
 
 export const initialState: State = {

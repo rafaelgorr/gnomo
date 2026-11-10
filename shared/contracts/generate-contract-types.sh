@@ -3,7 +3,7 @@ set -euo pipefail
 
 INPUT_DIR="./tsp-output/@typespec/openapi3"
 BACK_OUTPUT_DIR="../../back/src/generated/contracts"
-FRONT_OUTPUT_DIR="../../front/src/api/generated/contracts"
+FRONT_OUTPUT_DIR="../../front/src/generated/contracts"
 
 mkdir -p "$BACK_OUTPUT_DIR"
 

@@ -36,8 +36,6 @@ export interface components {
       prep_time: number
       /** Format: int32 */
       cook_time: number
-      /** Format: date-time */
-      created_at: string
     }
     CreateRecipeRequest: {
       recipe: components['schemas']['CreateRecipeInput']
