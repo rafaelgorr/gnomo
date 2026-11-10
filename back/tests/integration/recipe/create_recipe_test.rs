@@ -6,7 +6,6 @@ use back::contracts::kitchen::models::{
     CreateIngredientInput, CreateRecipeInput, CreateRecipeRequest, CreateRecipeStepInput,
     RecipeOutput,
 };
-use chrono::Utc;
 use sqlx::{Pool, Postgres};
 use tower::ServiceExt;
 
@@ -23,7 +22,6 @@ async fn create_recipe(pool: Pool<Postgres>) -> sqlx::Result<()> {
         description: Some(recipe_description.clone()),
         prep_time: 30,
         cook_time: 30,
-        created_at: Utc::now(),
     };
 
     let ingredient_1 = CreateIngredientInput {

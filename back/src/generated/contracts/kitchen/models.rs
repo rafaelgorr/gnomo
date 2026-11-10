@@ -18,7 +18,6 @@ pub struct CreateRecipeInput {
     pub description: Option<String>,
     pub prep_time: i64,
     pub cook_time: i64,
-    pub created_at: DateTime<Utc>,
 }
 
 /// CreateRecipeRequest
