@@ -16,3 +16,17 @@ export const getRecipes = async (): Promise<GetRecipes['output']> => {
 
   return data.recipes.map(mapRecipeToDomain)
 }
+
+export type GetRecipe = {
+  input: { id: string }
+  output: Recipe
+}
+
+export type GetRecipeResponse =
+  paths['/api/kitchen/recipes/{id}']['get']['responses']['200']['content']['application/json']
+
+export const getRecipe = async (input: GetRecipe['input']): Promise<GetRecipe['output']> => {
+  const { data } = await api.get<GetRecipeResponse>(`/api/kitchen/recipes/${input.id}`)
+
+  return mapRecipeToDomain(data.recipe)
+}

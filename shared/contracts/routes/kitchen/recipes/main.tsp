@@ -11,9 +11,9 @@ interface Recipes {
   @get
   list(): GetRecipesResponse;
 
-  // @get
-  // @route("/{id}")
-  // get(@path id: int32): RecipeResponse;
+  @get
+  @route("/{id}")
+  get(@path id: string): GetRecipeResponse;
 
   @post
   create(@body request: CreateRecipeRequest): CreateRecipeResponse;

@@ -15,6 +15,11 @@ const reducers: ReducerMap<keyof StoreState> = {
   entities,
 }
 
+export const initialStoreState: StoreState = {
+  entities: entitiesInitialState,
+  feature: featureInitialState,
+}
+
 const rootReducer = <S extends StoreState, A extends Action>(state: S | undefined, action: A) => {
   if (action.type === 'RESET_STORE') {
     state = undefined
@@ -27,7 +32,7 @@ export const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat([printMiddleware, errorMiddleware]),
-  preloadedState: { feature: featureInitialState, entities: entitiesInitialState },
+  preloadedState: initialStoreState,
   devTools: import.meta.env.DEV,
 })
 

@@ -4,12 +4,12 @@ import { useAppSelector } from '@/store/hooks'
 
 export const useConnector = (recipeId: string) => {
   const selectors = {
-    fetching: useAppSelector(featureSelectors.isFeatureFetching('getRecipes')),
+    fetching: useAppSelector(featureSelectors.isFeatureFetching('getRecipe')),
     recipe: useAppSelector((state) => entitiesSelectors.getRecipe(state, recipeId)),
   }
 
   const actions = {
-    getRecipes: kitchenActions.getRecipes,
+    getRecipe: kitchenActions.getRecipe,
   }
 
   return {

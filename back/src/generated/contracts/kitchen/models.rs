@@ -48,6 +48,12 @@ pub struct CreateRecipeStepInput {
     pub instruction: String,
 }
 
+/// GetRecipeResponse
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct GetRecipeResponse {
+    pub recipe: RecipeOutput,
+}
+
 /// GetRecipesResponse
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GetRecipesResponse {
@@ -96,4 +102,9 @@ pub struct RecipesListResponse200 {
 #[derive(Debug, Clone, Deserialize)]
 pub struct RecipesCreateResponse200 {
     pub body: CreateRecipeResponse,
+}
+/// The request has succeeded.
+#[derive(Debug, Clone, Deserialize)]
+pub struct RecipesGetResponse200 {
+    pub body: GetRecipeResponse,
 }

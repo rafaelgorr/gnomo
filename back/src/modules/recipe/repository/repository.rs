@@ -1,4 +1,4 @@
-use sqlx::{Pool, Postgres, Transaction};
+use sqlx::{Error, Pool, Postgres, Transaction};
 use uuid::Uuid;
 
 use crate::{
@@ -41,6 +41,87 @@ impl RecipeRepository {
             Ok(recipes) => recipes,
             Err(_) => vec![],
         }
+    }
+
+    pub async fn get_ingredients_by_recipe_id(
+        &self,
+        recipe_id: Uuid,
+    ) -> Result<Vec<DbIngredient>, Error> {
+        let query = sqlx::query_as!(
+            DbIngredient,
+            r#"
+              SELECT
+                I.id,
+                I.description,              
+                I.recipe_id
+              FROM kitchen.db_ingredient I
+              WHERE I.recipe_id = $1
+            "#,
+            recipe_id
+        )
+        .fetch_all(&self.db_pool);
+
+        match query.await {
+            Ok(ingredients) => Ok(ingredients),
+            Err(error) => Err(error),
+        }
+    }
+
+    pub async fn get_directions_by_recipe_id(
+        &self,
+        recipe_id: Uuid,
+    ) -> Result<Vec<DbRecipeStep>, Error> {
+        let query = sqlx::query_as!(
+            DbRecipeStep,
+            r#"
+              SELECT
+                S.id,
+                S.index,
+                S.instruction,
+                S.recipe_id
+              FROM kitchen.db_recipe_step S
+              WHERE S.recipe_id = $1
+            "#,
+            recipe_id
+        )
+        .fetch_all(&self.db_pool);
+
+        match query.await {
+            Ok(directions) => Ok(directions),
+            Err(error) => Err(error),
+        }
+    }
+
+    pub async fn get_recipe_by_id(
+        &self,
+        id: Uuid,
+    ) -> Result<(DbRecipe, Vec<DbIngredient>, Vec<DbRecipeStep>), Error> {
+        let query = sqlx::query_as!(
+            DbRecipe,
+            r#"
+              SELECT
+                R.id,
+                R.name,
+                R.description,
+                R.cook_time,
+                R.prep_time,
+                R.created_at as "created_at: chrono::NaiveDateTime",
+                R.updated_at as "updated_at: chrono::NaiveDateTime",
+                R.deleted_at as "deleted_at: chrono::NaiveDateTime"
+              FROM kitchen.db_recipe R
+              WHERE R.deleted_at IS NULL AND R.id = $1
+            "#,
+            id
+        )
+        .fetch_one(&self.db_pool);
+
+        let recipe = match query.await {
+            Ok(recipe) => recipe,
+            Err(error) => return Err(error),
+        };
+        let ingredients = self.get_ingredients_by_recipe_id(id).await?;
+        let directions = self.get_directions_by_recipe_id(id).await?;
+        Ok((recipe, ingredients, directions))
     }
 
     pub async fn get_ingredients_by_recipes(

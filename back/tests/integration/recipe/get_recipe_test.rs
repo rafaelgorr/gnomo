@@ -3,7 +3,7 @@ use axum::{
     http::{self, Request, StatusCode},
 };
 use back::{
-    contracts::kitchen::models::GetRecipesResponse,
+    contracts::kitchen::models::{GetRecipeResponse, GetRecipesResponse},
     modules::recipe::{
         dto::create::{CreateIngredientDto, CreateRecipeDto, CreateStepDto},
         repository::{repository::RecipeRepository, structs::CreateDbRecipe},
@@ -15,7 +15,7 @@ use tower::ServiceExt;
 use crate::common::spawn_app::spawn_app;
 
 #[sqlx::test]
-async fn get_recipe(pool: Pool<Postgres>) -> sqlx::Result<()> {
+async fn get_recipes(pool: Pool<Postgres>) -> sqlx::Result<()> {
     let app = spawn_app(&pool).await;
 
     let recipe_repository = RecipeRepository::new(pool);
@@ -64,17 +64,14 @@ async fn get_recipe(pool: Pool<Postgres>) -> sqlx::Result<()> {
         .body(Body::empty())
         .unwrap();
 
-    // 3. Invoke the router directly using Tower's Service traits
     let response = app.oneshot(request).await.unwrap();
 
     assert_eq!(response.status(), StatusCode::OK);
 
-    // 4. Extract response body into bytes/Vec<u8>
     let body_bytes = axum::body::to_bytes(response.into_body(), usize::MAX)
         .await
         .unwrap();
 
-    // 5. Deserialize bytes directly into Vec<UserDto>
     let response: GetRecipesResponse = serde_json::from_slice(&body_bytes).unwrap();
     assert_eq!(response.recipes.len(), 1);
     assert_eq!(response.recipes.first().unwrap().id, recipe.id.to_string());
@@ -110,6 +107,52 @@ async fn get_recipe(pool: Pool<Postgres>) -> sqlx::Result<()> {
             .iter()
             .any(|step| step.instruction == step_2_instruction && step.index == 1)
     );
+
+    Ok(())
+}
+
+#[sqlx::test]
+async fn get_recipe(pool: Pool<Postgres>) -> sqlx::Result<()> {
+    let app = spawn_app(&pool).await;
+
+    let recipe_repository = RecipeRepository::new(pool);
+
+    let (recipe, ingredients, directions) = recipe_repository
+        .create_recipe(CreateDbRecipe::new(
+            CreateRecipeDto {
+                name: String::from("Recipe 1"),
+                description: Some(String::from("This is a test recipe")),
+                prep_time: 30,
+                cook_time: 30,
+            },
+            vec![],
+            vec![],
+        ))
+        .await
+        .unwrap();
+
+    let request = Request::builder()
+        .method(http::Method::GET)
+        .uri(format!("/api/kitchen/recipes/{}", recipe.id))
+        .body(Body::empty())
+        .unwrap();
+
+    let response = app.oneshot(request).await.unwrap();
+
+    assert_eq!(response.status(), StatusCode::OK);
+
+    let body_bytes = axum::body::to_bytes(response.into_body(), usize::MAX)
+        .await
+        .unwrap();
+
+    let response: GetRecipeResponse = serde_json::from_slice(&body_bytes).unwrap();
+
+    assert_eq!(response.recipe.id, recipe.id.to_string());
+    assert_eq!(response.recipe.name, recipe.name);
+    assert_eq!(response.recipe.description, recipe.description);
+
+    assert!(ingredients.len() == 0);
+    assert!(directions.len() == 0);
 
     Ok(())
 }

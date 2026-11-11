@@ -1,11 +1,9 @@
-import type { StoreState } from '@/store'
+import { type StoreState } from '@/store'
 
 import { adapter } from './slice'
 
-export const getRecipes = adapter.getSelectors<StoreState>(
-  (state) => state.entities.kitchen.recipes,
-).selectAll
+const adapterSelectors = adapter.getSelectors<StoreState>((state) => state.entities.kitchen.recipes)
 
-export const getRecipe = adapter.getSelectors<StoreState>(
-  (state) => state.entities.kitchen.recipes,
-).selectById
+export const getRecipes = adapterSelectors.selectAll
+
+export const getRecipe = adapterSelectors.selectById

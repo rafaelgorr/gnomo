@@ -1,12 +1,15 @@
 use std::collections::HashMap;
 
-use axum::{Json, extract::State};
+use axum::{
+    Json,
+    extract::{Path, State},
+};
 use uuid::Uuid;
 
 use crate::{
     app_error::AppError,
     app_state::AppState,
-    contracts::kitchen::models::{GetRecipesResponse, RecipeOutput},
+    contracts::kitchen::models::{GetRecipeResponse, GetRecipesResponse, RecipeOutput},
     models::{db_ingredient::DbIngredient, db_recipe_step::DbRecipeStep},
     modules::recipe::dto::response::RecipeAggragate,
 };
@@ -75,4 +78,25 @@ pub async fn get_recipes(
         .collect();
 
     Ok(Json(GetRecipesResponse { recipes: response }))
+}
+
+pub async fn get_recipe(
+    State(state): State<AppState>,
+    Path(recipe_id): Path<Uuid>,
+) -> Result<Json<GetRecipeResponse>, AppError> {
+    let (recipe, ingredients, directions) =
+        match state.recipe_service.get_recipe_by_id(recipe_id).await {
+            Ok(recipe) => recipe,
+            Err(error) => return Err(error),
+        };
+
+    let recipe_response = RecipeOutput::from(RecipeAggragate {
+        recipe,
+        ingredients,
+        directions,
+    });
+
+    Ok(Json(GetRecipeResponse {
+        recipe: recipe_response,
+    }))
 }

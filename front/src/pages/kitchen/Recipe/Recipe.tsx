@@ -1,16 +1,28 @@
-import { Item, ItemContent, ItemTitle, Label } from '@gnomo/uikit'
+import { Item, ItemContent, ItemTitle, Label, Spinner } from '@gnomo/uikit'
 import { useParams } from '@tanstack/react-router'
+import { useEffect } from 'react'
 
 import { Page } from '@/components/Page'
 import type { Recipe } from '@/domain'
+import { useAppDispatch } from '@/store/hooks'
 
 import { useConnector } from './connector'
 
 export function Recipe() {
   const { recipeId } = useParams({ from: '/_kitchen/kitchen/recipes/$recipeId' })
-  const { selectors } = useConnector(recipeId)
 
-  const { recipe } = selectors
+  const dispatch = useAppDispatch()
+  const { actions, selectors } = useConnector(recipeId)
+
+  useEffect(() => {
+    void dispatch(actions.getRecipe({ id: recipeId }))
+  }, [dispatch, actions, recipeId])
+
+  const { recipe, fetching } = selectors
+
+  if (fetching || !recipe) {
+    return <Spinner />
+  }
 
   return (
     <Page>

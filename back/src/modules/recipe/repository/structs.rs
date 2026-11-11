@@ -1,5 +1,14 @@
 use crate::modules::recipe::dto::create::{CreateIngredientDto, CreateRecipeDto, CreateStepDto};
 
+pub struct GetDbRecipe {
+    pub name: String,
+    pub description: Option<String>,
+    pub prep_time: i32,
+    pub cook_time: i32,
+    pub ingredients: Vec<CreateIngredientDto>,
+    pub directions: Vec<CreateStepDto>,
+}
+
 pub struct CreateDbRecipe {
     pub name: String,
     pub description: Option<String>,

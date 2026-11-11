@@ -14,4 +14,16 @@ export const kitchenActions = {
       return thunkApi.rejectWithValue(e)
     }
   }),
+  getRecipe: createAsyncThunk(
+    `${prefix}/getRecipe`,
+    async (params: kitchenApi.GetRecipe['input'], thunkApi) => {
+      try {
+        const result = await kitchenApi.getRecipe(params)
+
+        return result
+      } catch (e) {
+        return thunkApi.rejectWithValue(e)
+      }
+    },
+  ),
 } as const
