@@ -28,6 +28,7 @@ export const mapRecipeToDomain = (recipe: components['schemas']['RecipeOutput'])
   description: recipe.description,
   cookTime: recipe.cook_time,
   prepTime: recipe.prep_time,
+  createdAt: recipe.created_at,
   ingredients: recipe.ingredients.map(mapIngredientToDomain),
   directions: recipe.directions.map(mapRecipeStepToDomain),
 })

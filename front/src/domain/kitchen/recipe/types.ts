@@ -15,6 +15,7 @@ export type Recipe = {
   description?: string
   cookTime: number
   prepTime: number
+  createdAt: string
   ingredients: Ingredient[]
   directions: RecipeStep[]
 }

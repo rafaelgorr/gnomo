@@ -8,4 +8,6 @@ export const initialState = {
 
 export type EntitiesState = typeof initialState
 
-export default combineReducers({ kitchen } satisfies Record<keyof EntitiesState, unknown>)
+export default combineReducers({
+  kitchen,
+} satisfies Record<keyof EntitiesState, unknown>)

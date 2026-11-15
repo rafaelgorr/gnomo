@@ -3,21 +3,25 @@ import { type Action, combineReducers, configureStore, type Reducer } from '@red
 import entities, { type EntitiesState, initialState as entitiesInitialState } from './entities'
 import feature, { type FeatureState, initialState as featureInitialState } from './feature'
 import { errorMiddleware, printMiddleware } from './middlewares'
+import ui, { initialState as uiInitialState, type UiState } from './ui'
 
 export type StoreState = {
   entities: EntitiesState
   feature: FeatureState
+  ui: UiState
 }
 
 type ReducerMap<K extends string> = Record<K, Reducer>
 const reducers: ReducerMap<keyof StoreState> = {
   feature,
   entities,
+  ui,
 }
 
 export const initialStoreState: StoreState = {
   entities: entitiesInitialState,
   feature: featureInitialState,
+  ui: uiInitialState,
 }
 
 const rootReducer = <S extends StoreState, A extends Action>(state: S | undefined, action: A) => {

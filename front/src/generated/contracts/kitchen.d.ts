@@ -28,7 +28,7 @@ export interface paths {
       cookie?: never
     }
     get: operations['Recipes_get']
-    put?: never
+    put: operations['Recipes_update']
     post?: never
     delete?: never
     options?: never
@@ -106,6 +106,43 @@ export interface components {
       index: number
       instruction: string
     }
+    /** @description The template for omitting properties. */
+    UpdateIngredientInput: {
+      description: string
+    }
+    /** @description The template for omitting properties. */
+    UpdateRecipeInput: {
+      name: string
+      description?: string
+      /** Format: int32 */
+      prep_time: number
+      /** Format: int32 */
+      cook_time: number
+    }
+    UpdateRecipeRequest: {
+      recipe: components['schemas']['UpdateRecipeInput']
+      ingredients: components['schemas']['UpdateIngredientInput'][]
+      directions: components['schemas']['UpdateRecipeStepInput'][]
+    }
+    UpdateRecipeResponse: {
+      id: string
+      name: string
+      description?: string
+      /** Format: int32 */
+      prep_time: number
+      /** Format: int32 */
+      cook_time: number
+      ingredients: components['schemas']['Ingredient'][]
+      directions: components['schemas']['RecipeStep'][]
+      /** Format: date-time */
+      created_at: string
+    }
+    /** @description The template for omitting properties. */
+    UpdateRecipeStepInput: {
+      /** Format: int32 */
+      index: number
+      instruction: string
+    }
   }
   responses: never
   parameters: never
@@ -177,6 +214,32 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['GetRecipeResponse']
+        }
+      }
+    }
+  }
+  Recipes_update: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UpdateRecipeRequest']
+      }
+    }
+    responses: {
+      /** @description The request has succeeded. */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['UpdateRecipeResponse']
         }
       }
     }

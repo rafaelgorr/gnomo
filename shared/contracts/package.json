@@ -9,11 +9,11 @@
   "dependencies": {
     "@tooling/eslint": "workspace:*",
     "@tooling/prettier": "workspace:*",
-    "@typespec/compiler": "^1.17.0",
-    "@typespec/http": "^1.17.0",
-    "@typespec/openapi": "^1.17.0",
-    "@typespec/openapi3": "^1.17.0",
-    "@typespec/rest": "^0.87.0",
+    "@typespec/compiler": "^1.18.0",
+    "@typespec/http": "^1.18.0",
+    "@typespec/openapi": "^1.18.0",
+    "@typespec/openapi3": "^1.18.0",
+    "@typespec/rest": "^0.88.0",
     "tsx": "catalog:"
   },
   "prettier": "@tooling/prettier",

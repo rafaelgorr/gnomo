@@ -7,3 +7,4 @@ import "./routes/kitchen/main.tsp";
 import "./routes/kitchen/recipes/get.tsp";
 import "./routes/kitchen/recipes/main.tsp";
 import "./routes/kitchen/recipes/post.tsp";
+import "./routes/kitchen/recipes/put.tsp";

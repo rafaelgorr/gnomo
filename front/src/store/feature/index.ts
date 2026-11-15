@@ -8,4 +8,6 @@ export const initialState = {
 
 export type FeatureState = typeof initialState
 
-export default combineReducers({ kitchen } satisfies Record<keyof FeatureState, unknown>)
+export default combineReducers({
+  kitchen,
+} satisfies Record<keyof FeatureState, unknown>)

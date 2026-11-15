@@ -1,6 +1,7 @@
 import "@typespec/http";
 import "./get.tsp";
 import "./post.tsp";
+import "./put.tsp";
 
 using Http;
 
@@ -18,9 +19,9 @@ interface Recipes {
   @post
   create(@body request: CreateRecipeRequest): CreateRecipeResponse;
 
-  // @put
-  // @route("/{id}")
-  // update(@path id: int32, @body request: UpdateRecipeRequest): RecipeResponse;
+  @put
+  @route("/{id}")
+  update(@path id: string, @body request: UpdateRecipeRequest): UpdateRecipeResponse;
 
   // @delete
   // @route("/{id}")

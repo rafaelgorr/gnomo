@@ -10,8 +10,8 @@ export function Root() {
   return (
     <>
       <AppSidebar />
-      <main className="flex flex-col p-2 w-dvw h-dvh">
-        <div className="flex justify-between">
+      <main className="flex flex-col p-2 w-dvw h-dvh pt-4">
+        <div className="flex justify-between px-2 items-center absolute top-2 left-0 right-0">
           <BackButton onClick={() => router.history.back()} />
           <MobileSidebarTrigger />
         </div>

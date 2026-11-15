@@ -10,7 +10,7 @@ export function AppSidebar() {
   const isCollapsed = state === 'collapsed'
 
   return (
-    <Sidebar variant="inset" collapsible="icon" className="p-2 bg-accent">
+    <Sidebar variant="inset" side="right" collapsible="icon" className="p-2 bg-accent">
       {isCollapsed ? <img src={gnome} className="size-10" /> : null}
       <div className="flex items-center">
         {!isCollapsed ? (

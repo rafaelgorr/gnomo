@@ -22,7 +22,7 @@ export function Recipes() {
 
   return (
     <Page>
-      <Page.Title>COZINHA DO GNOMO</Page.Title>
+      <Page.Title>Cozinha do gnomo</Page.Title>
       <Page.Content className="flex gap-2 flex-col pt-2">
         {fetching
           ? Array.from({ length: 15 }, (_, index) => index).map((index) => (
