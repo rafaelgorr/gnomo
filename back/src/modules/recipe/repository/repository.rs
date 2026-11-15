@@ -7,7 +7,10 @@ use crate::{
     modules::recipe::dto::create::{CreateIngredientDto, CreateStepDto},
 };
 
-use super::structs::CreateDbRecipe;
+use super::{
+    adapters::GetRecipesAggragate,
+    structs::{CreateDbRecipe, GetDbRecipe},
+};
 
 pub struct RecipeRepository {
     db_pool: Pool<Postgres>,
@@ -18,7 +21,7 @@ impl RecipeRepository {
         Self { db_pool }
     }
 
-    pub async fn get_recipes(&self) -> Vec<DbRecipe> {
+    pub async fn get_recipes(&self) -> Result<Vec<GetDbRecipe>, AppError> {
         let query = sqlx::query_as!(
             DbRecipe,
             r#"
@@ -37,10 +40,22 @@ impl RecipeRepository {
         )
         .fetch_all(&self.db_pool);
 
-        match query.await {
+        let recipes = match query.await {
             Ok(recipes) => recipes,
-            Err(_) => vec![],
-        }
+            Err(error) => return Err(AppError::Database(error)),
+        };
+
+        let recipe_ids = recipes.iter().map(|recipe| recipe.id).collect();
+
+        let ingredients = self.get_ingredients_by_recipes(&recipe_ids).await?;
+
+        let directions = self.get_directions_by_recipes(&recipe_ids).await?;
+
+        Ok(Vec::from(GetRecipesAggragate {
+            recipes,
+            ingredients,
+            directions,
+        }))
     }
 
     pub async fn get_ingredients_by_recipe_id(

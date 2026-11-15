@@ -9,7 +9,10 @@ use crate::{
     },
 };
 
-use super::{dto::create::CreateStepDto, repository::structs::CreateDbRecipe};
+use super::{
+    dto::create::CreateStepDto,
+    repository::structs::{CreateDbRecipe, GetDbRecipe},
+};
 
 pub struct RecipeService {
     recipe_repository: RecipeRepository,
@@ -46,10 +49,10 @@ impl RecipeService {
         directions
     }
 
-    pub async fn get_recipes(&self) -> Vec<DbRecipe> {
-        let recipes = self.recipe_repository.get_recipes().await;
+    pub async fn get_recipes(&self) -> Result<Vec<GetDbRecipe>, AppError> {
+        let recipes = self.recipe_repository.get_recipes().await?;
 
-        recipes
+        Ok(recipes)
     }
 
     pub async fn get_recipe_by_id(

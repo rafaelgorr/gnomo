@@ -5,13 +5,6 @@ use crate::models::db_ingredient::DbIngredient;
 use crate::models::db_recipe::DbRecipe;
 use crate::models::db_recipe_step::DbRecipeStep;
 
-#[derive(Debug, Serialize)]
-pub struct RecipeAggragate {
-    pub recipe: DbRecipe,
-    pub ingredients: Vec<DbIngredient>,
-    pub directions: Vec<DbRecipeStep>,
-}
-
 impl From<DbIngredient> for Ingredient {
     fn from(value: DbIngredient) -> Self {
         Self {
@@ -29,6 +22,13 @@ impl From<DbRecipeStep> for RecipeStep {
             instruction: value.instruction,
         }
     }
+}
+
+#[derive(Debug, Serialize)]
+pub struct RecipeAggragate {
+    pub recipe: DbRecipe,
+    pub ingredients: Vec<DbIngredient>,
+    pub directions: Vec<DbRecipeStep>,
 }
 
 impl From<RecipeAggragate> for RecipeOutput {

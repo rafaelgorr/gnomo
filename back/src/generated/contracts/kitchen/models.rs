@@ -88,10 +88,58 @@ pub struct RecipeStep {
     pub instruction: String,
 }
 
+/// The template for omitting properties.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct UpdateIngredientInput {
+    pub description: String,
+}
+
+/// The template for omitting properties.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct UpdateRecipeInput {
+    pub name: String,
+    pub description: Option<String>,
+    pub prep_time: i64,
+    pub cook_time: i64,
+}
+
+/// UpdateRecipeRequest
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct UpdateRecipeRequest {
+    pub recipe: UpdateRecipeInput,
+    pub ingredients: Vec<UpdateIngredientInput>,
+    pub directions: Vec<UpdateRecipeStepInput>,
+}
+
+/// UpdateRecipeResponse
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct UpdateRecipeResponse {
+    pub id: String,
+    pub name: String,
+    pub description: Option<String>,
+    pub prep_time: i64,
+    pub cook_time: i64,
+    pub ingredients: Vec<Ingredient>,
+    pub directions: Vec<RecipeStep>,
+    pub created_at: DateTime<Utc>,
+}
+
+/// The template for omitting properties.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct UpdateRecipeStepInput {
+    pub index: i64,
+    pub instruction: String,
+}
+
 /// RecipesCreateRequest
 #[derive(Debug, Clone, Serialize)]
 pub struct RecipesCreateRequest {
     pub body: CreateRecipeRequest,
+}
+/// RecipesUpdateRequest
+#[derive(Debug, Clone, Serialize)]
+pub struct RecipesUpdateRequest {
+    pub body: UpdateRecipeRequest,
 }
 /// The request has succeeded.
 #[derive(Debug, Clone, Deserialize)]
@@ -107,4 +155,9 @@ pub struct RecipesCreateResponse200 {
 #[derive(Debug, Clone, Deserialize)]
 pub struct RecipesGetResponse200 {
     pub body: GetRecipeResponse,
+}
+/// The request has succeeded.
+#[derive(Debug, Clone, Deserialize)]
+pub struct RecipesUpdateResponse200 {
+    pub body: UpdateRecipeResponse,
 }

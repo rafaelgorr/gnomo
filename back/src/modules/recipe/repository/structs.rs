@@ -1,12 +1,12 @@
-use crate::modules::recipe::dto::create::{CreateIngredientDto, CreateRecipeDto, CreateStepDto};
+use crate::{
+    models::{db_ingredient::DbIngredient, db_recipe::DbRecipe, db_recipe_step::DbRecipeStep},
+    modules::recipe::dto::create::{CreateIngredientDto, CreateRecipeDto, CreateStepDto},
+};
 
 pub struct GetDbRecipe {
-    pub name: String,
-    pub description: Option<String>,
-    pub prep_time: i32,
-    pub cook_time: i32,
-    pub ingredients: Vec<CreateIngredientDto>,
-    pub directions: Vec<CreateStepDto>,
+    pub recipe: DbRecipe,
+    pub ingredients: Vec<DbIngredient>,
+    pub directions: Vec<DbRecipeStep>,
 }
 
 pub struct CreateDbRecipe {

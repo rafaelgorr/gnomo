@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use axum::{
     Json,
     extract::{Path, State},
@@ -10,69 +8,21 @@ use crate::{
     app_error::AppError,
     app_state::AppState,
     contracts::kitchen::models::{GetRecipeResponse, GetRecipesResponse, RecipeOutput},
-    models::{db_ingredient::DbIngredient, db_recipe_step::DbRecipeStep},
     modules::recipe::dto::response::RecipeAggragate,
 };
 
 pub async fn get_recipes(
     State(state): State<AppState>,
 ) -> Result<Json<GetRecipesResponse>, AppError> {
-    let recipes = state.recipe_service.get_recipes().await;
-    let recipe_ids = recipes.iter().map(|recipe| recipe.id).collect();
-
-    let future_ingredients = state.recipe_service.get_ingredients_by_recipes(&recipe_ids);
-
-    let ingredients: Vec<DbIngredient> = match future_ingredients.await {
-        Ok(result) => result,
-        Err(error) => return Err(error),
-    };
-
-    let mut ingredients_by_recipe_id: HashMap<Uuid, Vec<DbIngredient>> =
-        ingredients.into_iter().fold(
-            HashMap::new(),
-            |mut ingredients_by_recipe_id, ingredient| {
-                ingredients_by_recipe_id
-                    .entry(ingredient.recipe_id)
-                    .or_default()
-                    .push(ingredient);
-
-                ingredients_by_recipe_id
-            },
-        );
-
-    let future_directions = state.recipe_service.get_directions_by_recipes(&recipe_ids);
-
-    let directions = match future_directions.await {
-        Ok(result) => result,
-        Err(error) => return Err(error),
-    };
-
-    let mut directions_by_recipe_id: HashMap<Uuid, Vec<DbRecipeStep>> = directions
-        .into_iter()
-        .fold(HashMap::new(), |mut directions_by_recipe_id, ingredient| {
-            directions_by_recipe_id
-                .entry(ingredient.recipe_id)
-                .or_default()
-                .push(ingredient);
-
-            directions_by_recipe_id
-        });
+    let recipes = state.recipe_service.get_recipes().await?;
 
     let response = recipes
         .into_iter()
-        .map(|recipe| {
-            let ingredients = ingredients_by_recipe_id
-                .remove(&recipe.id)
-                .unwrap_or_default();
-
-            let directions = directions_by_recipe_id
-                .remove(&recipe.id)
-                .unwrap_or_default();
-
+        .map(|get_db_recipe| {
             RecipeOutput::from(RecipeAggragate {
-                recipe,
-                ingredients,
-                directions,
+                recipe: get_db_recipe.recipe,
+                ingredients: get_db_recipe.ingredients,
+                directions: get_db_recipe.directions,
             })
         })
         .collect();

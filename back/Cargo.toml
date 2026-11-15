@@ -18,7 +18,6 @@ sqlx = { version = "0.9.0", features = [
   "time",
   "chrono",
 ] }
-sqlx-cli = "0.9.0"
 sqlx-gen = { version = "0.5.8", features = ["cli"] }
 tokio = { version = "1.52.3", features = ["full"] }
 uuid = { version = "1.23.3", features = ["v4", "serde"] }
@@ -29,4 +28,3 @@ tracing = "0.1.44"
 validator = { version = "0.21", features = ["derive"] }
 tower = { version = "0.5.3", features = ["util"] }
 tower-http = { version = "0.7.1", features = ["cors"] }
-openapi-model-generator = "0.6.3"
