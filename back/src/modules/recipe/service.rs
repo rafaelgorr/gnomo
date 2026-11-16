@@ -3,15 +3,12 @@ use uuid::Uuid;
 use crate::{
     app_error::AppError,
     models::{db_ingredient::DbIngredient, db_recipe::DbRecipe, db_recipe_step::DbRecipeStep},
-    modules::recipe::{
-        dto::create::{CreateIngredientDto, CreateRecipeDto},
-        repository::repository::RecipeRepository,
-    },
+    modules::recipe::repository::repository::RecipeRepository,
 };
 
 use super::{
-    dto::create::CreateStepDto,
-    repository::structs::{CreateDbRecipe, GetDbRecipe},
+    dto::dtos::{IngredientDto, RecipeDto, StepDto},
+    repository::structs::{GetDbRecipe, RepoDbRecipeParams},
 };
 
 pub struct RecipeService {
@@ -67,17 +64,31 @@ impl RecipeService {
 
     pub async fn create_recipe(
         &self,
-        dtos: (
-            CreateRecipeDto,
-            Vec<CreateIngredientDto>,
-            Vec<CreateStepDto>,
-        ),
+        dtos: (RecipeDto, Vec<IngredientDto>, Vec<StepDto>),
     ) -> Result<(DbRecipe, Vec<DbIngredient>, Vec<DbRecipeStep>), AppError> {
         let (recipe_dto, ingredients, directions) = dtos;
 
         let recipe = self
             .recipe_repository
-            .create_recipe(CreateDbRecipe::new(recipe_dto, ingredients, directions))
+            .create_recipe(RepoDbRecipeParams::new(recipe_dto, ingredients, directions))
+            .await;
+
+        recipe
+    }
+
+    pub async fn update_recipe(
+        &self,
+        id: Uuid,
+        dtos: (RecipeDto, Vec<IngredientDto>, Vec<StepDto>),
+    ) -> Result<(DbRecipe, Vec<DbIngredient>, Vec<DbRecipeStep>), AppError> {
+        let (recipe_dto, ingredients, directions) = dtos;
+
+        let recipe = self
+            .recipe_repository
+            .update_recipe(
+                id,
+                RepoDbRecipeParams::new(recipe_dto, ingredients, directions),
+            )
             .await;
 
         recipe

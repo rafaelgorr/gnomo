@@ -5,8 +5,8 @@ use axum::{
 use back::{
     contracts::kitchen::models::{GetRecipeResponse, GetRecipesResponse},
     modules::recipe::{
-        dto::create::{CreateIngredientDto, CreateRecipeDto, CreateStepDto},
-        repository::{repository::RecipeRepository, structs::CreateDbRecipe},
+        dto::dtos::{IngredientDto, RecipeDto, StepDto},
+        repository::{repository::RecipeRepository, structs::RepoDbRecipeParams},
     },
 };
 use sqlx::{Pool, Postgres};
@@ -29,27 +29,27 @@ async fn get_recipes(pool: Pool<Postgres>) -> sqlx::Result<()> {
         "Heat remaining 2 tablespoons oil in the same skillet over medium-high heat.".to_string();
 
     let (recipe, ingredients, directions) = recipe_repository
-        .create_recipe(CreateDbRecipe::new(
-            CreateRecipeDto {
+        .create_recipe(RepoDbRecipeParams::new(
+            RecipeDto {
                 name: String::from("Recipe 1"),
                 description: Some(String::from("This is a test recipe")),
                 prep_time: 30,
                 cook_time: 30,
             },
             vec![
-                CreateIngredientDto {
+                IngredientDto {
                     description: ingredient_description_1.clone(),
                 },
-                CreateIngredientDto {
+                IngredientDto {
                     description: ingredient_description_2.clone(),
                 },
             ],
             vec![
-                CreateStepDto {
+                StepDto {
                     index: 0,
                     instruction: step_1_instruction.clone(),
                 },
-                CreateStepDto {
+                StepDto {
                     index: 1,
                     instruction: step_2_instruction.clone(),
                 },
@@ -118,8 +118,8 @@ async fn get_recipe(pool: Pool<Postgres>) -> sqlx::Result<()> {
     let recipe_repository = RecipeRepository::new(pool);
 
     let (recipe, ingredients, directions) = recipe_repository
-        .create_recipe(CreateDbRecipe::new(
-            CreateRecipeDto {
+        .create_recipe(RepoDbRecipeParams::new(
+            RecipeDto {
                 name: String::from("Recipe 1"),
                 description: Some(String::from("This is a test recipe")),
                 prep_time: 30,

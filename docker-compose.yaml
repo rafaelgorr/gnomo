@@ -12,7 +12,7 @@ services:
       - "5438:5432"
     volumes:
       # CRITICAL: Mount to the base directory for PostgreSQL 18+ compatibility
-      - postgres_data:/var/lib/postgresql
+      - gnome_db_data:/var/lib/postgresql
   test_db:
     image: postgres:18
     container_name: test-gnome-db
@@ -26,7 +26,8 @@ services:
       - "5439:5432"
     volumes:
       # CRITICAL: Mount to the base directory for PostgreSQL 18+ compatibility
-      - postgres_data:/var/lib/postgresql
+      - test_gnome_db_data:/var/lib/postgresql
 
 volumes:
-  postgres_data:
+  gnome_db_data:
+  test_gnome_db_data:

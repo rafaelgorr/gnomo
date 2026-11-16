@@ -4,12 +4,12 @@ use uuid::Uuid;
 use crate::{
     app_error::AppError,
     models::{db_ingredient::DbIngredient, db_recipe::DbRecipe, db_recipe_step::DbRecipeStep},
-    modules::recipe::dto::create::{CreateIngredientDto, CreateStepDto},
+    modules::recipe::dto::dtos::{IngredientDto, StepDto},
 };
 
 use super::{
     adapters::GetRecipesAggragate,
-    structs::{CreateDbRecipe, GetDbRecipe},
+    structs::{GetDbRecipe, RepoDbRecipeParams},
 };
 
 pub struct RecipeRepository {
@@ -191,7 +191,7 @@ impl RecipeRepository {
     async fn insert_ingredients_on_recipe(
         &self,
         recipe_id: Uuid,
-        ingredients: Vec<CreateIngredientDto>,
+        ingredients: Vec<IngredientDto>,
         tx: &mut Transaction<'_, Postgres>,
     ) -> Result<Vec<DbIngredient>, AppError> {
         let mut query_builder: sqlx::QueryBuilder<sqlx::Postgres> =
@@ -214,7 +214,7 @@ impl RecipeRepository {
     async fn insert_steps_on_recipe(
         &self,
         recipe_id: Uuid,
-        directions: Vec<CreateStepDto>,
+        directions: Vec<StepDto>,
         tx: &mut Transaction<'_, Postgres>,
     ) -> Result<Vec<DbRecipeStep>, AppError> {
         let mut query_builder: sqlx::QueryBuilder<sqlx::Postgres> = sqlx::QueryBuilder::new(
@@ -239,11 +239,11 @@ impl RecipeRepository {
 
     pub async fn create_recipe(
         &self,
-        db_recipe: CreateDbRecipe,
+        db_recipe: RepoDbRecipeParams,
     ) -> Result<(DbRecipe, Vec<DbIngredient>, Vec<DbRecipeStep>), AppError> {
         let mut tx: Transaction<'_, Postgres> = self.db_pool.begin().await?;
 
-        let CreateDbRecipe {
+        let RepoDbRecipeParams {
             name,
             description,
             prep_time,
@@ -285,6 +285,113 @@ impl RecipeRepository {
         } else {
             vec![]
         };
+        let recipe_directions: Vec<DbRecipeStep> = if directions.len() > 0 {
+            self.insert_steps_on_recipe(recipe.id, directions, &mut tx)
+                .await?
+        } else {
+            vec![]
+        };
+
+        tx.commit().await?;
+
+        Ok((recipe, recipe_ingredients, recipe_directions))
+    }
+
+    pub async fn remove_ingredients_by_recipe_id(
+        &self,
+        recipe_id: Uuid,
+        tx: &mut Transaction<'_, Postgres>,
+    ) -> Result<(), AppError> {
+        sqlx::query!(
+            r#"
+              DELETE FROM kitchen.db_ingredient
+              WHERE recipe_id = $1        
+            "#,
+            recipe_id,
+        )
+        .execute(&mut **tx)
+        .await?;
+
+        Ok(())
+    }
+
+    pub async fn remove_directions_by_recipe_id(
+        &self,
+        recipe_id: Uuid,
+        tx: &mut Transaction<'_, Postgres>,
+    ) -> Result<(), AppError> {
+        sqlx::query!(
+            r#"
+              DELETE FROM kitchen.db_recipe_step
+              WHERE recipe_id = $1        
+            "#,
+            recipe_id,
+        )
+        .execute(&mut **tx)
+        .await?;
+
+        Ok(())
+    }
+
+    pub async fn update_recipe(
+        &self,
+        id: Uuid,
+        db_recipe: RepoDbRecipeParams,
+    ) -> Result<(DbRecipe, Vec<DbIngredient>, Vec<DbRecipeStep>), AppError> {
+        let mut tx: Transaction<'_, Postgres> = self.db_pool.begin().await?;
+
+        let RepoDbRecipeParams {
+            name,
+            description,
+            prep_time,
+            cook_time,
+            ingredients,
+            directions,
+        } = db_recipe;
+
+        let query = sqlx::query_as!(
+            DbRecipe,
+            r#"
+              INSERT INTO kitchen.db_recipe (id, name, description, cook_time, prep_time)
+              VALUES ($1, $2, $3, $4, $5)
+              ON CONFLICT (id)
+              DO UPDATE SET
+                name = EXCLUDED.name,
+                description = EXCLUDED.description,
+                cook_time = EXCLUDED.cook_time,
+                prep_time = EXCLUDED.prep_time
+              RETURNING 
+                id, 
+                name, 
+                description,
+                cook_time,
+                prep_time,
+                created_at as "created_at: chrono::NaiveDateTime",
+                updated_at as "updated_at: chrono::NaiveDateTime",
+                deleted_at as "deleted_at: chrono::NaiveDateTime"        
+            "#,
+            id,
+            name,
+            description,
+            prep_time,
+            cook_time
+        )
+        .fetch_one(&mut *tx);
+
+        let recipe = match query.await {
+            Ok(recipe_response) => recipe_response,
+            Err(error) => return Err(AppError::Database(error)),
+        };
+
+        self.remove_ingredients_by_recipe_id(id, &mut tx).await?;
+        let recipe_ingredients: Vec<DbIngredient> = if ingredients.len() > 0 {
+            self.insert_ingredients_on_recipe(recipe.id, ingredients, &mut tx)
+                .await?
+        } else {
+            vec![]
+        };
+
+        self.remove_directions_by_recipe_id(id, &mut tx).await?;
         let recipe_directions: Vec<DbRecipeStep> = if directions.len() > 0 {
             self.insert_steps_on_recipe(recipe.id, directions, &mut tx)
                 .await?

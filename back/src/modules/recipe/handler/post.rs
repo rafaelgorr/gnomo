@@ -14,27 +14,26 @@ pub async fn create_recipe(
 ) -> Result<Json<RecipeOutput>, AppError> {
     let create_recipe_dto = CreateRecipeRequestDto::from(request);
 
-    match create_recipe_dto.validate() {
-        Ok(_) => {
-            let CreateRecipeRequestDto {
-                recipe,
-                ingredients,
-                directions,
-            } = create_recipe_dto;
-
-            let (recipe, ingredients, directions) = state
-                .recipe_service
-                .create_recipe((recipe, ingredients, directions))
-                .await?;
-
-            let response = RecipeOutput::from(RecipeAggragate {
-                recipe,
-                ingredients,
-                directions,
-            });
-
-            Ok(Json(response))
-        }
-        Err(error) => Err(AppError::ValidationError(error.to_string())),
+    if let Err(error) = create_recipe_dto.validate() {
+        return Err(AppError::ValidationError(error.to_string()));
     }
+
+    let CreateRecipeRequestDto {
+        recipe,
+        ingredients,
+        directions,
+    } = create_recipe_dto;
+
+    let (recipe, ingredients, directions) = state
+        .recipe_service
+        .create_recipe((recipe, ingredients, directions))
+        .await?;
+
+    let response = RecipeOutput::from(RecipeAggragate {
+        recipe,
+        ingredients,
+        directions,
+    });
+
+    Ok(Json(response))
 }

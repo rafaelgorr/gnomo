@@ -56,12 +56,10 @@ async fn create_recipe(pool: Pool<Postgres>) -> sqlx::Result<()> {
         .body(Body::from(payload))
         .unwrap();
 
-    // 3. Invoke the router directly using Tower's Service traits
     let response = app.oneshot(request).await.unwrap();
 
     assert_eq!(response.status(), StatusCode::OK);
 
-    // 4. Extract response body into bytes/Vec<u8>
     let body_bytes = axum::body::to_bytes(response.into_body(), usize::MAX)
         .await
         .unwrap();
