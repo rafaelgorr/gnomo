@@ -31,14 +31,7 @@ pub struct CreateRecipeRequest {
 /// CreateRecipeResponse
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CreateRecipeResponse {
-    pub id: String,
-    pub name: String,
-    pub description: Option<String>,
-    pub prep_time: i64,
-    pub cook_time: i64,
-    pub ingredients: Vec<Ingredient>,
-    pub directions: Vec<RecipeStep>,
-    pub created_at: DateTime<Utc>,
+    pub recipe: RecipeOutput,
 }
 
 /// The template for omitting properties.
@@ -114,14 +107,7 @@ pub struct UpdateRecipeRequest {
 /// UpdateRecipeResponse
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UpdateRecipeResponse {
-    pub id: String,
-    pub name: String,
-    pub description: Option<String>,
-    pub prep_time: i64,
-    pub cook_time: i64,
-    pub ingredients: Vec<Ingredient>,
-    pub directions: Vec<RecipeStep>,
-    pub created_at: DateTime<Utc>,
+    pub recipe: RecipeOutput,
 }
 
 /// The template for omitting properties.

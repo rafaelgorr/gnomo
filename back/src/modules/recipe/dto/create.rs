@@ -6,8 +6,11 @@ use super::dtos::{IngredientDto, RecipeDto, StepDto};
 
 #[derive(Validate)]
 pub struct CreateRecipeRequestDto {
+    #[validate(nested)]
     pub recipe: RecipeDto,
+    #[validate(nested)]
     pub ingredients: Vec<IngredientDto>,
+    #[validate(nested)]
     pub directions: Vec<StepDto>,
 }
 

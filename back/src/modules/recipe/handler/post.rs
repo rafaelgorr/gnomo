@@ -4,14 +4,14 @@ use validator::Validate;
 use crate::{
     app_error::AppError,
     app_state::AppState,
-    contracts::kitchen::models::{CreateRecipeRequest, RecipeOutput},
+    contracts::kitchen::models::{CreateRecipeRequest, CreateRecipeResponse, RecipeOutput},
     modules::recipe::dto::{create::CreateRecipeRequestDto, response::RecipeAggragate},
 };
 
 pub async fn create_recipe(
     State(state): State<AppState>,
     Json(request): Json<CreateRecipeRequest>,
-) -> Result<Json<RecipeOutput>, AppError> {
+) -> Result<Json<CreateRecipeResponse>, AppError> {
     let create_recipe_dto = CreateRecipeRequestDto::from(request);
 
     if let Err(error) = create_recipe_dto.validate() {
@@ -29,11 +29,11 @@ pub async fn create_recipe(
         .create_recipe((recipe, ingredients, directions))
         .await?;
 
-    let response = RecipeOutput::from(RecipeAggragate {
+    let recipe = RecipeOutput::from(RecipeAggragate {
         recipe,
         ingredients,
         directions,
     });
 
-    Ok(Json(response))
+    Ok(Json(CreateRecipeResponse { recipe }))
 }

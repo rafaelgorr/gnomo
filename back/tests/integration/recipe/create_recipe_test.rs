@@ -3,8 +3,8 @@ use axum::{
     http::{self, Request, StatusCode},
 };
 use back::contracts::kitchen::models::{
-    CreateIngredientInput, CreateRecipeInput, CreateRecipeRequest, CreateRecipeStepInput,
-    RecipeOutput,
+    CreateIngredientInput, CreateRecipeInput, CreateRecipeRequest, CreateRecipeResponse,
+    CreateRecipeStepInput,
 };
 use sqlx::{Pool, Postgres};
 use tower::ServiceExt;
@@ -51,7 +51,7 @@ async fn create_recipe(pool: Pool<Postgres>) -> sqlx::Result<()> {
 
     let request = Request::builder()
         .method(http::Method::POST)
-        .uri("/api/kitchen/recipe")
+        .uri("/api/kitchen/recipes")
         .header(http::header::CONTENT_TYPE, "application/json")
         .body(Body::from(payload))
         .unwrap();
@@ -64,9 +64,9 @@ async fn create_recipe(pool: Pool<Postgres>) -> sqlx::Result<()> {
         .await
         .unwrap();
 
-    let created_recipe: RecipeOutput = serde_json::from_slice(&body_bytes).unwrap();
-    assert_eq!(created_recipe.name, recipe_name);
-    assert_eq!(created_recipe.description, Some(recipe_description));
+    let CreateRecipeResponse { recipe } = serde_json::from_slice(&body_bytes).unwrap();
+    assert_eq!(recipe.name, recipe_name);
+    assert_eq!(recipe.description, Some(recipe_description));
 
     Ok(())
 }

@@ -38,9 +38,9 @@ pub struct RecipeDto {
     ))]
     pub description: Option<String>,
 
-    #[validate(range(min = 1, message = "Recipe prep time should be positive"))]
+    #[validate(range(min = 1, max = 999, message = "Recipe prep time should be positive"))]
     pub prep_time: i32,
 
-    #[validate(range(min = 1, message = "Recipe cook time should be positive"))]
+    #[validate(range(min = 1, max = 999, message = "Recipe cook time should be positive"))]
     pub cook_time: i32,
 }

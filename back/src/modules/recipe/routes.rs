@@ -15,8 +15,8 @@ pub fn router() -> Router<AppState> {
     let api_routes: Router<AppState> = Router::new()
         .route("/kitchen/recipes", get(get_recipes))
         .route("/kitchen/recipes/{id}", get(get_recipe))
-        .route("/kitchen/recipe/{id}", put(update_recipe))
-        .route("/kitchen/recipe", post(create_recipe));
+        .route("/kitchen/recipes/{id}", put(update_recipe))
+        .route("/kitchen/recipes", post(create_recipe));
 
     Router::new().nest("/api", api_routes)
 }

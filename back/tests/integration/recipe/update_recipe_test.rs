@@ -4,7 +4,7 @@ use axum::{
 };
 use back::{
     contracts::kitchen::models::{
-        RecipeOutput, UpdateIngredientInput, UpdateRecipeInput, UpdateRecipeRequest,
+        UpdateIngredientInput, UpdateRecipeInput, UpdateRecipeRequest, UpdateRecipeResponse,
         UpdateRecipeStepInput,
     },
     modules::recipe::{
@@ -37,11 +37,9 @@ async fn update_recipe(pool: Pool<Postgres>) -> sqlx::Result<()> {
         .await
         .unwrap();
 
-    let recipe_name = "New recipe".to_string();
-    let recipe_description = "New recipe description".to_string();
     let new_recipe = UpdateRecipeInput {
-        name: recipe_name.clone(),
-        description: Some(recipe_description.clone()),
+        name: "New recipe".to_string(),
+        description: Some("New recipe description".to_string()),
         prep_time: 60,
         cook_time: 60,
     };
@@ -64,8 +62,8 @@ async fn update_recipe(pool: Pool<Postgres>) -> sqlx::Result<()> {
         index: 1,
     };
 
-    let payload = serde_json::to_vec(&UpdateRecipeRequest {
-        recipe: new_recipe,
+    let payload: Vec<u8> = serde_json::to_vec(&UpdateRecipeRequest {
+        recipe: new_recipe.clone(),
         ingredients: vec![ingredient_1, ingredient_2],
         directions: vec![step_1, step_2],
     })
@@ -73,7 +71,7 @@ async fn update_recipe(pool: Pool<Postgres>) -> sqlx::Result<()> {
 
     let request = Request::builder()
         .method(http::Method::PUT)
-        .uri(format!("/api/kitchen/recipe/{}", recipe.id))
+        .uri(format!("/api/kitchen/recipes/{}", recipe.id))
         .header(http::header::CONTENT_TYPE, "application/json")
         .body(Body::from(payload))
         .unwrap();
@@ -82,25 +80,16 @@ async fn update_recipe(pool: Pool<Postgres>) -> sqlx::Result<()> {
 
     assert_eq!(response.status(), StatusCode::OK);
 
-    // let request = Request::builder()
-    //     .method(http::Method::GET)
-    //     .uri(format!("/api/kitchen/recipes/{}", recipe.id))
-    //     .body(Body::empty())
-    //     .unwrap();
-
-    // let response = app.oneshot(request).await.unwrap();
-
-    assert_eq!(response.status(), StatusCode::OK);
-
     let body_bytes = axum::body::to_bytes(response.into_body(), usize::MAX)
         .await
         .unwrap();
 
-    let updated_recipe: RecipeOutput = serde_json::from_slice(&body_bytes).unwrap();
-    assert_eq!(updated_recipe.name, recipe_name);
-    assert_eq!(updated_recipe.description, Some(recipe_description));
-    assert_eq!(updated_recipe.cook_time, recipe.cook_time as i64);
-    assert_eq!(updated_recipe.prep_time, recipe.prep_time as i64);
+    let UpdateRecipeResponse { recipe } = serde_json::from_slice(&body_bytes).unwrap();
+
+    assert_eq!(recipe.name, new_recipe.name);
+    assert_eq!(recipe.description, new_recipe.description);
+    assert_eq!(recipe.cook_time, new_recipe.cook_time);
+    assert_eq!(recipe.prep_time, new_recipe.prep_time);
 
     Ok(())
 }

@@ -8,7 +8,7 @@ use validator::Validate;
 use crate::{
     app_error::AppError,
     app_state::AppState,
-    contracts::kitchen::models::{RecipeOutput, UpdateRecipeRequest},
+    contracts::kitchen::models::{RecipeOutput, UpdateRecipeRequest, UpdateRecipeResponse},
     modules::recipe::dto::{response::RecipeAggragate, update::UpdateRecipeRequestDto},
 };
 
@@ -16,7 +16,7 @@ pub async fn update_recipe(
     State(state): State<AppState>,
     Path(recipe_id): Path<Uuid>,
     Json(request): Json<UpdateRecipeRequest>,
-) -> Result<Json<RecipeOutput>, AppError> {
+) -> Result<Json<UpdateRecipeResponse>, AppError> {
     let update_recipe_dto = UpdateRecipeRequestDto::from(request);
 
     if let Err(error) = update_recipe_dto.validate() {
@@ -34,11 +34,11 @@ pub async fn update_recipe(
         .update_recipe(recipe_id, (recipe, ingredients, directions))
         .await?;
 
-    let response = RecipeOutput::from(RecipeAggragate {
+    let recipe = RecipeOutput::from(RecipeAggragate {
         recipe,
         ingredients,
         directions,
     });
 
-    Ok(Json(response))
+    Ok(Json(UpdateRecipeResponse { recipe }))
 }
