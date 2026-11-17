@@ -59,17 +59,7 @@ export interface components {
       directions: components['schemas']['CreateRecipeStepInput'][]
     }
     CreateRecipeResponse: {
-      id: string
-      name: string
-      description?: string
-      /** Format: int32 */
-      prep_time: number
-      /** Format: int32 */
-      cook_time: number
-      ingredients: components['schemas']['Ingredient'][]
-      directions: components['schemas']['RecipeStep'][]
-      /** Format: date-time */
-      created_at: string
+      recipe: components['schemas']['RecipeOutput']
     }
     /** @description The template for omitting properties. */
     CreateRecipeStepInput: {
@@ -125,17 +115,7 @@ export interface components {
       directions: components['schemas']['UpdateRecipeStepInput'][]
     }
     UpdateRecipeResponse: {
-      id: string
-      name: string
-      description?: string
-      /** Format: int32 */
-      prep_time: number
-      /** Format: int32 */
-      cook_time: number
-      ingredients: components['schemas']['Ingredient'][]
-      directions: components['schemas']['RecipeStep'][]
-      /** Format: date-time */
-      created_at: string
+      recipe: components['schemas']['RecipeOutput']
     }
     /** @description The template for omitting properties. */
     UpdateRecipeStepInput: {

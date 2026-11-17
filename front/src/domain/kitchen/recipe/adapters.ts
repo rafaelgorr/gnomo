@@ -1,9 +1,9 @@
 import type { components } from '@/generated/contracts/kitchen'
 
 import type {
-  CreateIngredientRequest,
-  CreateRecipeRequest,
-  CreateRecipeStepRequest,
+  CreateIngredientInput,
+  CreateRecipeInput,
+  CreateRecipeStepInput,
   Ingredient,
   Recipe,
   RecipeStep,
@@ -26,8 +26,8 @@ export const mapRecipeToDomain = (recipe: components['schemas']['RecipeOutput'])
   id: recipe.id,
   name: recipe.name,
   description: recipe.description,
-  cookTime: recipe.cook_time,
-  prepTime: recipe.prep_time,
+  cookTime: recipe.cook_time.toString(),
+  prepTime: recipe.prep_time.toString(),
   createdAt: recipe.created_at,
   ingredients: recipe.ingredients.map(mapIngredientToDomain),
   directions: recipe.directions.map(mapRecipeStepToDomain),
@@ -36,25 +36,25 @@ export const mapRecipeToDomain = (recipe: components['schemas']['RecipeOutput'])
 //#region DOMAIN -> API
 
 const mapRecipeStepToApi = (
-  step: CreateRecipeStepRequest,
+  step: CreateRecipeStepInput,
 ): components['schemas']['CreateRecipeStepInput'] => ({
   index: step.index,
   instruction: step.instruction,
 })
 
 const mapIngredientToApi = (
-  ingredient: CreateIngredientRequest,
+  ingredient: CreateIngredientInput,
 ): components['schemas']['CreateIngredientInput'] => ({
   description: ingredient.description,
 })
 
-type MapRecipeToApiParams = {
-  recipe: CreateRecipeRequest
-  ingredients: CreateIngredientRequest[]
-  directions: CreateRecipeStepRequest[]
+export type MapRecipeToApiParams = {
+  recipe: CreateRecipeInput
+  ingredients: CreateIngredientInput[]
+  directions: CreateRecipeStepInput[]
 }
 
-export const mapRecipeToApi = (
+export const mapCreateRecipeToApi = (
   params: MapRecipeToApiParams,
 ): components['schemas']['CreateRecipeRequest'] => {
   const { directions, ingredients, recipe } = params
@@ -62,8 +62,8 @@ export const mapRecipeToApi = (
     recipe: {
       name: recipe.name,
       description: recipe.description,
-      cook_time: recipe.cookTime,
-      prep_time: recipe.prepTime,
+      cook_time: Number(recipe.cookTime),
+      prep_time: Number(recipe.prepTime),
     },
     ingredients: ingredients.map(mapIngredientToApi),
     directions: directions.map(mapRecipeStepToApi),

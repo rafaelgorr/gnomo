@@ -26,4 +26,28 @@ export const kitchenActions = {
       }
     },
   ),
+  createRecipe: createAsyncThunk(
+    `${prefix}/createRecipe`,
+    async (params: kitchenApi.CreateRecipe['input'], thunkApi) => {
+      try {
+        const result = await kitchenApi.createRecipe(params)
+
+        return result
+      } catch (e) {
+        return thunkApi.rejectWithValue(e)
+      }
+    },
+  ),
+  updateRecipe: createAsyncThunk(
+    `${prefix}/updateRecipe`,
+    async (params: kitchenApi.UpdateRecipe['input'], thunkApi) => {
+      try {
+        const result = await kitchenApi.updateRecipe(params)
+
+        return result
+      } catch (e) {
+        return thunkApi.rejectWithValue(e)
+      }
+    },
+  ),
 } as const

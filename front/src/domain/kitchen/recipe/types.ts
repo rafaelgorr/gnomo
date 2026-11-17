@@ -13,13 +13,13 @@ export type Recipe = {
   id: string
   name: string
   description?: string
-  cookTime: number
-  prepTime: number
+  cookTime: string
+  prepTime: string
   createdAt: string
   ingredients: Ingredient[]
   directions: RecipeStep[]
 }
 
-export type CreateRecipeRequest = Omit<Recipe, 'id'>
-export type CreateIngredientRequest = Omit<Ingredient, 'id'>
-export type CreateRecipeStepRequest = Omit<RecipeStep, 'id'>
+export type CreateRecipeInput = Pick<Recipe, 'name' | 'description' | 'cookTime' | 'prepTime'>
+export type CreateIngredientInput = Omit<Ingredient, 'id'>
+export type CreateRecipeStepInput = Omit<RecipeStep, 'id'>

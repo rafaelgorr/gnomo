@@ -23,6 +23,12 @@ const slice = createSlice({
     builder.addCase(kitchenActions.getRecipe.fulfilled, (state, action) => {
       adapter.addOne(state.recipes, action.payload)
     })
+    builder.addCase(kitchenActions.updateRecipe.fulfilled, (state, action) => {
+      adapter.upsertOne(state.recipes, action.payload)
+    })
+    builder.addCase(kitchenActions.createRecipe.fulfilled, (state, action) => {
+      adapter.addOne(state.recipes, action.payload)
+    })
   },
 })
 

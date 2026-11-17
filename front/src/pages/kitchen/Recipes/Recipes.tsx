@@ -1,11 +1,20 @@
-import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle, Skeleton } from '@gnomo/uikit'
+import {
+  Button,
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+  Skeleton,
+} from '@gnomo/uikit'
 import { useNavigate } from '@tanstack/react-router'
-import { ChevronRightIcon } from 'lucide-react'
+import { ChevronRightIcon, PlusIcon } from 'lucide-react'
 import { useEffect } from 'react'
 
 import { Page } from '@/components/Page'
 import { useAppDispatch } from '@/store/hooks'
 
+import { RecipeDrawerForm } from '../RecipeForm/RecipeDrawerForm'
 import { useConnector } from './connector'
 
 export function Recipes() {
@@ -46,6 +55,13 @@ export function Recipes() {
               </Item>
             ))}
       </Page.Content>
+      <div className="absolute bottom-0 right-0">
+        <RecipeDrawerForm>
+          <Button variant="outline" size="icon-lg">
+            <PlusIcon />
+          </Button>
+        </RecipeDrawerForm>
+      </div>
     </Page>
   )
 }

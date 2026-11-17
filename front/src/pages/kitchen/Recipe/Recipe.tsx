@@ -1,11 +1,13 @@
-import { Item, ItemContent, ItemTitle, Label, Spinner } from '@gnomo/uikit'
+import { Button, Item, ItemContent, ItemTitle, Label } from '@gnomo/uikit'
 import { useParams } from '@tanstack/react-router'
+import { EditIcon } from 'lucide-react'
 import { useEffect } from 'react'
 
 import { Page } from '@/components/Page'
 import type { Recipe } from '@/domain'
 import { useAppDispatch } from '@/store/hooks'
 
+import { RecipeDrawerForm } from '../RecipeForm/RecipeDrawerForm'
 import { useConnector } from './connector'
 
 export function Recipe() {
@@ -21,7 +23,7 @@ export function Recipe() {
   const { recipe, fetching } = selectors
 
   if (fetching || !recipe) {
-    return <Spinner />
+    return null
   }
 
   return (
@@ -64,6 +66,13 @@ export function Recipe() {
           ))}
         </div>
       </Page.Content>
+      <div className="absolute bottom-0 right-0">
+        <RecipeDrawerForm recipe={recipe}>
+          <Button variant="outline" size="icon-lg">
+            <EditIcon />
+          </Button>
+        </RecipeDrawerForm>
+      </div>
     </Page>
   )
 }

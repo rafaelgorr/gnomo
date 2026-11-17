@@ -1,6 +1,7 @@
 -include back/.env
 
 DATABASE_URL ?= postgres://test:test@localhost:5434/test
+TEST_DATABASE_URL ?= postgres://gnomo:gnomo@localhost:5439/test_gnome_db
 
 
 .PHONY: build-uikit
@@ -40,9 +41,9 @@ build-back: build-core
 	cargo build
 
 .PHONY: test-back
-test-back:
+test-back: run-test-migrations
 	cd back && \
-	cargo test
+	DATABASE_URL=${TEST_DATABASE_URL} cargo test
 
 .PHONY: generate-models
 generate-models:
@@ -57,6 +58,11 @@ generate-models:
 run-migrations:
 	cd core && \
 	pnpm prisma migrate dev
+
+.PHONY: run-test-migrations
+run-test-migrations:
+	cd core && \
+	DATABASE_URL=${TEST_DATABASE_URL} pnpm prisma migrate dev
 
 .PHONY: create-migration
 create-migration:
