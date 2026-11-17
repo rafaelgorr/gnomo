@@ -13,4 +13,6 @@ model UpdateRecipeRequest {
   directions: UpdateRecipeStepInput[];
 }
 
-model UpdateRecipeResponse is RecipeOutput;
+model UpdateRecipeResponse {
+  recipe: RecipeOutput;
+}

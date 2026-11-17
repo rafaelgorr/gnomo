@@ -1,10 +1,30 @@
 export { ThemeProvider, useTheme } from './src/components/theme-provider'
 export { Button, buttonVariants } from './src/components/ui/button'
 export {
+  ButtonGroup,
+  ButtonGroupSeparator,
+  ButtonGroupText,
+  buttonGroupVariants,
+} from './src/components/ui/button-group'
+export {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from './src/components/ui/collapsible'
+export {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerPortal,
+  DrawerPrimitive,
+  DrawerSwipeHandle,
+  DrawerTitle,
+  DrawerTrigger,
+} from './src/components/ui/drawer'
 export {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -22,7 +42,27 @@ export {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from './src/components/ui/dropdown-menu'
+export {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+  FieldLegend,
+  FieldSeparator,
+  FieldSet,
+  FieldTitle,
+} from './src/components/ui/field'
 export { Input } from './src/components/ui/input'
+export {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+  InputGroupText,
+  InputGroupTextarea,
+} from './src/components/ui/input-group'
 export {
   Item,
   ItemActions,
@@ -75,6 +115,7 @@ export {
 } from './src/components/ui/sidebar'
 export { Skeleton } from './src/components/ui/skeleton'
 export { Spinner } from './src/components/ui/spinner'
+export { Textarea } from './src/components/ui/textarea'
 export {
   Tooltip,
   TooltipContent,

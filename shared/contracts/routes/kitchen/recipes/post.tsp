@@ -13,4 +13,6 @@ model CreateRecipeRequest {
   directions: CreateRecipeStepInput[];
 }
 
-model CreateRecipeResponse is RecipeOutput;
+model CreateRecipeResponse {
+  recipe: RecipeOutput;
+}
