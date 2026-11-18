@@ -1,6 +1,5 @@
 export type RecipeStep = {
   id: string
-  index: number
   instruction: string
 }
 

@@ -22,12 +22,12 @@ export function Recipe() {
 
   const { recipe, fetching } = selectors
 
-  if (fetching || !recipe) {
+  if (!recipe) {
     return null
   }
 
   return (
-    <Page>
+    <Page loading={!!fetching} loadingGnome="chef">
       <Page.Title>{recipe.name}</Page.Title>
       <Page.Content className="flex flex-col gap-2">
         <p>{recipe.description}</p>
@@ -54,11 +54,11 @@ export function Recipe() {
           ))}
         </div>
         <Label htmlFor="directions-list" className="font-bold text-lg">
-          Preparo
+          Modo de preparo
         </Label>
         <div id="directions-list" className="flex flex-col gap-2">
           {recipe.directions.map((step) => (
-            <Item key={step.id} variant="outline">
+            <Item key={step.id} variant="outline" className="h-20 flex items-start">
               <ItemContent>
                 <ItemTitle>{step.instruction}</ItemTitle>
               </ItemContent>

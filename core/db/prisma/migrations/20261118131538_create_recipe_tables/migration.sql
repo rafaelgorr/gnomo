@@ -13,7 +13,6 @@ CREATE TABLE "kitchen"."db_ingredient" (
 -- CreateTable
 CREATE TABLE "kitchen"."db_recipe_step" (
     "id" UUID NOT NULL DEFAULT gen_random_uuid(),
-    "index" INTEGER NOT NULL,
     "instruction" VARCHAR(500) NOT NULL,
     "recipe_id" UUID NOT NULL,
 

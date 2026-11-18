@@ -63,8 +63,6 @@ export interface components {
     }
     /** @description The template for omitting properties. */
     CreateRecipeStepInput: {
-      /** Format: int32 */
-      index: number
       instruction: string
     }
     GetRecipeResponse: {
@@ -92,8 +90,6 @@ export interface components {
     }
     RecipeStep: {
       id: string
-      /** Format: int32 */
-      index: number
       instruction: string
     }
     /** @description The template for omitting properties. */
@@ -119,8 +115,6 @@ export interface components {
     }
     /** @description The template for omitting properties. */
     UpdateRecipeStepInput: {
-      /** Format: int32 */
-      index: number
       instruction: string
     }
   }

@@ -1,6 +1,5 @@
 model RecipeStep {
   id: string;
-  index: int32;
   instruction: string;
 }
 

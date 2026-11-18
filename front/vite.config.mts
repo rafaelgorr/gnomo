@@ -19,6 +19,7 @@ export default defineConfig({
   server: {
     port: 3030,
     allowedHosts: true,
+    host: true,
   },
   preview: {
     port: 3030,

@@ -1,12 +1,34 @@
 import { Outlet, useRouter } from '@tanstack/react-router'
+import { useEffect } from 'react'
 
 import { BackButton } from '@/components/BackButton'
 
 import { AppSidebar } from '../components/AppSidebar/AppSidebar'
+import { useConnector } from './connector'
 import { MobileSidebarTrigger } from './MobileSidebarTrigger'
 
 export function Root() {
   const router = useRouter()
+  const { selectors } = useConnector()
+  const { theme } = selectors
+
+  useEffect(() => {
+    const root = window.document.documentElement
+
+    root.classList.remove('light', 'dark')
+
+    // if (theme === 'system') {
+    //   const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
+    //     ? 'dark'
+    //     : 'light'
+
+    //   root.classList.add(systemTheme)
+    //   return
+    // }
+
+    root.classList.add(theme)
+  }, [theme])
+
   return (
     <>
       <AppSidebar />

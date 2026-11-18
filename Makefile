@@ -3,6 +3,29 @@
 DATABASE_URL ?= postgres://test:test@localhost:5434/test
 TEST_DATABASE_URL ?= postgres://gnomo:gnomo@localhost:5439/test_gnome_db
 
+# CORE 
+
+.PHONY: run-migrations
+run-migrations:
+	cd core && \
+	pnpm prisma migrate dev
+
+.PHONY: run-test-migrations
+run-test-migrations:
+	cd core && \
+	DATABASE_URL=${TEST_DATABASE_URL} pnpm prisma migrate dev
+
+.PHONY: create-migration
+create-migration:
+	cd core && \
+	pnpm prisma migrate dev --create-only
+
+.PHONY: build-core
+build-core:
+	cd core && \
+	pnpm prisma generate
+
+# SHARED
 
 .PHONY: build-uikit
 build-uikit:
@@ -25,25 +48,8 @@ generate-contracts: build-contracts
 .PHONY: build-shared
 build-shared: build-uikit
 
-.PHONY: build-core
-build-core:
-	cd core && \
-	pnpm prisma generate
 
-.PHONY: run-back
-run-back: build-core generate-contracts
-	cd back && \
-	cargo run
-
-.PHONY: build-back
-build-back: build-core
-	cd back && \
-	cargo build
-
-.PHONY: test-back
-test-back: run-test-migrations
-	cd back && \
-	DATABASE_URL=${TEST_DATABASE_URL} cargo test
+# BACK
 
 .PHONY: generate-models
 generate-models:
@@ -54,20 +60,22 @@ generate-models:
 	-o ./src/domain/models \
 	-s kitchen
 
-.PHONY: run-migrations
-run-migrations:
-	cd core && \
-	pnpm prisma migrate dev
+.PHONY: run-back
+run-back: build-core generate-contracts 
+	cd back && \
+	cargo run
 
-.PHONY: run-test-migrations
-run-test-migrations:
-	cd core && \
-	DATABASE_URL=${TEST_DATABASE_URL} pnpm prisma migrate dev
+.PHONY: build-back
+build-back: build-core
+	cd back && \
+	cargo build
 
-.PHONY: create-migration
-create-migration:
-	cd core && \
-	pnpm prisma migrate dev --create-only
+.PHONY: test-back
+test-back: run-test-migrations 
+	cd back && \
+	DATABASE_URL=${TEST_DATABASE_URL} cargo test
+
+# FRONT
 
 .PHONY: run-front
 run-front:
