@@ -91,7 +91,6 @@ impl RecipeRepository {
             r#"
               SELECT
                 S.id,
-                S.index,
                 S.instruction,
                 S.recipe_id
               FROM kitchen.db_recipe_step S
@@ -110,7 +109,7 @@ impl RecipeRepository {
     pub async fn get_recipe_by_id(
         &self,
         id: Uuid,
-    ) -> Result<(DbRecipe, Vec<DbIngredient>, Vec<DbRecipeStep>), Error> {
+    ) -> Result<(DbRecipe, Vec<DbIngredient>, Vec<DbRecipeStep>), AppError> {
         let query = sqlx::query_as!(
             DbRecipe,
             r#"
@@ -132,7 +131,7 @@ impl RecipeRepository {
 
         let recipe = match query.await {
             Ok(recipe) => recipe,
-            Err(error) => return Err(error),
+            Err(_) => return Err(AppError::NotFound),
         };
         let ingredients = self.get_ingredients_by_recipe_id(id).await?;
         let directions = self.get_directions_by_recipe_id(id).await?;
@@ -172,7 +171,6 @@ impl RecipeRepository {
             r#"
               SELECT
                 S.id,
-                S.index,
                 S.instruction,
                 S.recipe_id
               FROM kitchen.db_recipe_step S
@@ -218,16 +216,14 @@ impl RecipeRepository {
         tx: &mut Transaction<'_, Postgres>,
     ) -> Result<Vec<DbRecipeStep>, AppError> {
         let mut query_builder: sqlx::QueryBuilder<sqlx::Postgres> = sqlx::QueryBuilder::new(
-            " INSERT INTO kitchen.db_recipe_step (index, instruction, recipe_id) ",
+            " INSERT INTO kitchen.db_recipe_step (instruction, recipe_id) ",
         );
 
         query_builder.push_values(directions, |mut b, step| {
-            b.push_bind(step.index)
-                .push_bind(step.instruction)
-                .push_bind(recipe_id);
+            b.push_bind(step.instruction).push_bind(recipe_id);
         });
 
-        query_builder.push(" RETURNING id, index, instruction, recipe_id");
+        query_builder.push(" RETURNING id, instruction, recipe_id");
 
         let query = query_builder.build_query_as::<DbRecipeStep>();
 

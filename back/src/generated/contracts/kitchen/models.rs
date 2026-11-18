@@ -37,7 +37,6 @@ pub struct CreateRecipeResponse {
 /// The template for omitting properties.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CreateRecipeStepInput {
-    pub index: i64,
     pub instruction: String,
 }
 
@@ -77,7 +76,6 @@ pub struct RecipeOutput {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct RecipeStep {
     pub id: String,
-    pub index: i64,
     pub instruction: String,
 }
 
@@ -113,7 +111,6 @@ pub struct UpdateRecipeResponse {
 /// The template for omitting properties.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UpdateRecipeStepInput {
-    pub index: i64,
     pub instruction: String,
 }
 

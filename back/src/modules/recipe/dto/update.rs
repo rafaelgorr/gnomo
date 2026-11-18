@@ -34,7 +34,6 @@ impl From<UpdateRecipeRequest> for UpdateRecipeRequestDto {
                 .directions
                 .iter()
                 .map(|step| StepDto {
-                    index: step.index as i32,
                     instruction: step.instruction.clone(),
                 })
                 .collect(),

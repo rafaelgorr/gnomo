@@ -46,11 +46,9 @@ async fn get_recipes(pool: Pool<Postgres>) -> sqlx::Result<()> {
             ],
             vec![
                 StepDto {
-                    index: 0,
                     instruction: step_1_instruction.clone(),
                 },
                 StepDto {
-                    index: 1,
                     instruction: step_2_instruction.clone(),
                 },
             ],
@@ -99,13 +97,13 @@ async fn get_recipes(pool: Pool<Postgres>) -> sqlx::Result<()> {
     assert!(
         directions
             .iter()
-            .any(|step| step.instruction == step_1_instruction && step.index == 0)
+            .any(|step| step.instruction == step_1_instruction)
     );
 
     assert!(
         directions
             .iter()
-            .any(|step| step.instruction == step_2_instruction && step.index == 1)
+            .any(|step| step.instruction == step_2_instruction)
     );
 
     Ok(())

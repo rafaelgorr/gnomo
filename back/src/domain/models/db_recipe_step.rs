@@ -11,7 +11,6 @@ use uuid::Uuid;
 pub struct DbRecipeStep {
     #[sqlx_gen(primary_key, column_default = "gen_random_uuid()")]
     pub id: Uuid,
-    pub index: i32,
     pub instruction: String,
     pub recipe_id: Uuid,
 }

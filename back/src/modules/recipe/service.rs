@@ -58,7 +58,7 @@ impl RecipeService {
     ) -> Result<(DbRecipe, Vec<DbIngredient>, Vec<DbRecipeStep>), AppError> {
         match self.recipe_repository.get_recipe_by_id(id).await {
             Ok(result) => Ok(result),
-            Err(db_error) => Err(AppError::Database(db_error)),
+            Err(db_error) => Err(db_error),
         }
     }
 

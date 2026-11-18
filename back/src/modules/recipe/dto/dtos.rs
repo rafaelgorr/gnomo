@@ -1,7 +1,5 @@
 use validator::Validate;
 
-use crate::utils::validate_positive::validate_positive;
-
 #[derive(Validate)]
 pub struct IngredientDto {
     #[validate(length(
@@ -20,10 +18,6 @@ pub struct StepDto {
         message = "Direction step instruction must be 500 characters"
     ))]
     pub instruction: String,
-
-    #[validate(range(min = 0, message = "Direction step should be positive"))]
-    #[validate(custom(function = "validate_positive"))]
-    pub index: i32,
 }
 
 #[derive(Validate)]

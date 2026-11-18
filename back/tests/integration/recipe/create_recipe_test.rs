@@ -34,12 +34,10 @@ async fn create_recipe(pool: Pool<Postgres>) -> sqlx::Result<()> {
 
     let step_1 = CreateRecipeStepInput {
         instruction: "Heat 2 tablespoons oil in a large".to_string(),
-        index: 0,
     };
     let step_2 = CreateRecipeStepInput {
         instruction: "Heat remaining 2 tablespoons oil in the same skillet over medium-high heat."
             .to_string(),
-        index: 1,
     };
 
     let payload = serde_json::to_vec(&CreateRecipeRequest {

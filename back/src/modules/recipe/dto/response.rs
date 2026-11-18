@@ -18,7 +18,6 @@ impl From<DbRecipeStep> for RecipeStep {
     fn from(value: DbRecipeStep) -> Self {
         Self {
             id: value.id.to_string(),
-            index: value.index as i64,
             instruction: value.instruction,
         }
     }
