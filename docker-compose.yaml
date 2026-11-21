@@ -1,4 +1,41 @@
 services:
+  local_db:
+    image: postgres:18
+    container_name: gnome-local-db
+    restart: unless-stopped
+    shm_size: 256mb
+    environment:
+      POSTGRES_USER: gnomo
+      POSTGRES_PASSWORD: gnomo
+      POSTGRES_DB: gnome_local_db
+    ports:
+      - "5438:5432"
+    volumes:
+      - gnome_local_db_data:/var/lib/postgresql
+  test_db:
+    image: postgres:18
+    container_name: gnome-test-db
+    restart: unless-stopped
+    shm_size: 256mb
+    environment:
+      POSTGRES_USER: gnomo
+      POSTGRES_PASSWORD: gnomo
+      POSTGRES_DB: gnome_test_db
+    ports:
+      - "5439:5432"
+    volumes:
+      - gnome_test_db_data:/var/lib/postgresql
+  front:
+    build:
+      context: .
+      dockerfile: tooling/docker/front/Dockerfile
+    image: gnomo-front
+    container_name: gnomo-front
+    env_file:
+      - tooling/docker/front/.env.docker
+    ports:
+      - "1809:1809"
+    restart: unless-stopped
   db:
     image: postgres:18
     container_name: gnome-db
@@ -9,25 +46,37 @@ services:
       POSTGRES_PASSWORD: gnomo
       POSTGRES_DB: gnome_db
     ports:
-      - "5438:5432"
+      - "5440:5432"
     volumes:
-      # CRITICAL: Mount to the base directory for PostgreSQL 18+ compatibility
       - gnome_db_data:/var/lib/postgresql
-  test_db:
-    image: postgres:18
-    container_name: test-gnome-db
-    restart: unless-stopped
-    shm_size: 256mb
-    environment:
-      POSTGRES_USER: gnomo
-      POSTGRES_PASSWORD: gnomo
-      POSTGRES_DB: test_gnome_db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gnomo -d gnome_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  back:
+    build:
+      context: .
+      dockerfile: tooling/docker/back/Dockerfile
+    image: gnomo-back
+    container_name: gnomo-back
+    env_file:
+      - tooling/docker/back/.env.docker
+    depends_on:
+      db:
+        condition: service_healthy
+    command:
+      - sh
+      - -c
+      - |
+        make run-migrations &&
+        make build-back ARGS="--release" &&
+        exec /app/back/target/release/back
     ports:
-      - "5439:5432"
-    volumes:
-      # CRITICAL: Mount to the base directory for PostgreSQL 18+ compatibility
-      - test_gnome_db_data:/var/lib/postgresql
+      - "8086:8086"
+    restart: unless-stopped
 
 volumes:
   gnome_db_data:
-  test_gnome_db_data:
+  gnome_local_db_data:
+  gnome_test_db_data:

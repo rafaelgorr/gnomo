@@ -48,8 +48,11 @@ pub async fn create_app(db_pool: &Pool<Postgres>) -> Router {
 }
 
 pub async fn setup_app_server(db_pool: &Pool<Postgres>, app: Router) {
-    // 3. Define the server address
-    let addr = SocketAddr::from(([127, 0, 0, 1], 8085));
+    let addr = if cfg!(debug_assertions) {
+        SocketAddr::from(([127, 0, 0, 1], 8085))
+    } else {
+        SocketAddr::from(([0, 0, 0, 0], 8086))
+    };
     println!("🚀 Server running at http://{}", addr);
 
     // 4. Bind and start the server using tokio listener

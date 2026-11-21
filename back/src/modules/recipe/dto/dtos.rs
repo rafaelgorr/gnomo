@@ -22,7 +22,7 @@ pub struct StepDto {
 
 #[derive(Validate)]
 pub struct RecipeDto {
-    #[validate(length(min = 1, max = 25, message = "Recipe name must be 25 characters"))]
+    #[validate(length(min = 1, max = 100, message = "Recipe name must be 25 characters"))]
     pub name: String,
 
     #[validate(length(

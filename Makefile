@@ -32,22 +32,29 @@ build-uikit:
 	cd shared/uikit && \
 	pnpm build
 
+.PHONY: build-shared
+build-shared: build-uikit
+
 .PHONY: build-contracts
 build-contracts:
 	cd shared/contracts && \
 	pnpm create-main && \
-	tsp compile .
+	pnpm exec tsp compile .
 
-.PHONY: generate-contracts
-generate-contracts: build-contracts
+.PHONY: generate-front-contracts
+generate-front-contracts: build-contracts
 	cd shared/contracts && \
-	./generate-contract-types.sh && \
+	./generate-front-types.sh && \
 	cd ../../ && \
 	pnpm prettier --write front/src/generated/contracts/*.ts
 
-.PHONY: build-shared
-build-shared: build-uikit
+.PHONY: generate-back-contracts
+generate-back-contracts: build-contracts
+	cd shared/contracts && \
+	./generate-back-types.sh
 
+.PHONY: generate-contracts
+generate-contracts: generate-back-contracts generate-front-contracts
 
 # BACK
 
@@ -61,19 +68,24 @@ generate-models:
 	-s kitchen
 
 .PHONY: run-back
-run-back: build-core generate-contracts 
+run-back: build-core generate-back-contracts
 	cd back && \
 	cargo run
 
 .PHONY: build-back
 build-back: build-core
 	cd back && \
-	cargo build
+	cargo build $(ARGS)
 
 .PHONY: test-back
 test-back: run-test-migrations 
 	cd back && \
 	DATABASE_URL=${TEST_DATABASE_URL} cargo test
+
+.PHONY: docker-back
+docker-back: 
+	docker compose up db -d && \
+	docker compose up -d --no-deps --build back
 
 # FRONT
 
@@ -83,11 +95,15 @@ run-front:
 	pnpm vite --host
 
 .PHONY: build-front
-build-front: build-uikit
+build-front: build-uikit generate-front-contracts
 	cd front && \
-	pnpm exec vite build && \
-	pnpm exec tsc
+	pnpm build
 
 .PHONY: lint-front
 lint-front: ## Check for lint errors
 	cd front && pnpm eslint .
+
+.PHONY: docker-front
+docker-front: 
+	docker compose up -d --no-deps --build front
+

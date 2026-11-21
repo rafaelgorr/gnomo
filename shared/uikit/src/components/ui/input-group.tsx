@@ -1,10 +1,9 @@
-import * as React from 'react'
-import { cva, type VariantProps } from 'class-variance-authority'
-import { cn } from 'cn'
-
 import { Button } from '@gnomo/uikit/components/ui/button'
 import { Input } from '@gnomo/uikit/components/ui/input'
 import { Textarea } from '@gnomo/uikit/components/ui/textarea'
+import { cva, type VariantProps } from 'class-variance-authority'
+import { cn } from 'cn'
+import * as React from 'react'
 
 function InputGroup({ className, ...props }: React.ComponentProps<'div'>) {
   return (
@@ -138,7 +137,7 @@ export {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
-  InputGroupText,
   InputGroupInput,
+  InputGroupText,
   InputGroupTextarea,
 }
