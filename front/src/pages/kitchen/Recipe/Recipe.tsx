@@ -27,7 +27,7 @@ export function Recipe() {
   }
 
   return (
-    <Page loading={!!fetching} loadingGnome="chef">
+    <Page loading={fetching}>
       <Page.Title>{recipe.name}</Page.Title>
       <Page.Content className="flex flex-col gap-2">
         <p>{recipe.description}</p>

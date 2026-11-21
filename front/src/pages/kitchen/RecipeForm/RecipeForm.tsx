@@ -65,6 +65,7 @@ export function RecipeForm(props: RecipeFormProps) {
           ingredients: values.ingredients.filter((ingredient) => !!ingredient.description),
           directions: values.directions.filter((step) => !!step.instruction),
         })
+
     void dispatch(action)
       .unwrap()
       .then(() => {
@@ -109,7 +110,7 @@ export function RecipeForm(props: RecipeFormProps) {
               </Field>
             )}
           />
-          <Field orientation="horizontal">
+          <div className="grid grid-cols-2 gap-2">
             <Controller
               name="prepTime"
               control={form.control}
@@ -162,7 +163,7 @@ export function RecipeForm(props: RecipeFormProps) {
                 </Field>
               )}
             />
-          </Field>
+          </div>
 
           <div className="flex flex-col gap-6">
             <IngredientsArrayForm />

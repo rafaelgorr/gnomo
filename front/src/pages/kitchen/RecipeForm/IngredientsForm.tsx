@@ -19,44 +19,45 @@ export function IngredientsArrayForm() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex gap-2 justify-between">
-        <p className="text-lg font-bold">Ingredientes</p>
-        <Button variant="outline" size="icon-sm" onClick={() => append({ description: '' })}>
-          <PlusIcon />
-        </Button>
-      </div>
-      <div className="flex flex-col gap-1">
-        {fields.map((field, index) => (
-          <Controller
-            key={field.id}
-            name={`ingredients.${index}.description`}
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <InputGroup>
-                  <InputGroupInput
-                    {...field}
-                    placeholder="Novo ingrediente..."
-                    aria-invalid={fieldState.invalid}
-                    autoComplete="off"
-                  />
-                  <InputGroupAddon align="inline-end">
-                    <InputGroupButton
-                      // size="icon-lg"
-                      variant="ghost"
-                      size="icon-sm"
-                      tabIndex={-1}
-                      onClick={() => remove(index)}
-                    >
-                      <TrashIcon />
-                    </InputGroupButton>
-                  </InputGroupAddon>
-                </InputGroup>
-                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-              </Field>
-            )}
-          />
-        ))}
+      <p className="text-lg font-bold">Ingredientes</p>
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col items-end gap-1">
+          {fields.map((field, index) => (
+            <Controller
+              key={field.id}
+              name={`ingredients.${index}.description`}
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <InputGroup>
+                    <InputGroupInput
+                      {...field}
+                      placeholder="Novo ingrediente..."
+                      aria-invalid={fieldState.invalid}
+                      autoComplete="off"
+                    />
+                    <InputGroupAddon align="inline-end">
+                      <InputGroupButton
+                        variant="ghost"
+                        size="icon-sm"
+                        tabIndex={-1}
+                        onClick={() => remove(index)}
+                      >
+                        <TrashIcon />
+                      </InputGroupButton>
+                    </InputGroupAddon>
+                  </InputGroup>
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+          ))}
+        </div>
+        <Field>
+          <Button variant="outline" className="w-25" onClick={() => append({ description: '' })}>
+            <PlusIcon />
+          </Button>
+        </Field>
       </div>
     </div>
   )

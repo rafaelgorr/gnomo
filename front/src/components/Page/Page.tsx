@@ -1,26 +1,31 @@
 import { cn } from '@gnomo/uikit'
+import { useLocation } from '@tanstack/react-router'
 import type React from 'react'
-import type { MergeExclusive } from 'type-fest'
 
-import { GnomeLoading, type GnomeLoadingProps } from '../GnomeLoading'
+import type { FileRoute } from '@/utils/routes'
+
+import { GnomeImage } from '../GnomeImage'
 import { Content } from './Content'
 import { Title } from './Title'
 
-type LoadingProps = {
-  loading: boolean
-  loadingGnome: GnomeLoadingProps['gnome']
+interface PageProps extends React.ComponentProps<'div'> {
+  loading?: boolean
 }
 
-type BaseProps = React.ComponentProps<'div'>
-
-type PageProps = MergeExclusive<BaseProps & LoadingProps, BaseProps & { loading?: undefined }>
-
 export function Page(props: PageProps) {
-  const { children, className, loading, loadingGnome, ...divProps } = props
+  const { children, className, loading, ...divProps } = props
+
+  const { pathname } = useLocation()
+
+  const currentRoute = (pathname.split('/').at(1) || '/') as FileRoute
 
   return (
     <div {...divProps} className={cn('flex flex-col h-screen max-h-full relative', className)}>
-      {loading ? <GnomeLoading gnome={loadingGnome} /> : children}
+      <GnomeImage
+        gnome={currentRoute}
+        className={loading ? 'animate-pulse opacity-60' : undefined}
+      />
+      {!loading ? children : null}
     </div>
   )
 }

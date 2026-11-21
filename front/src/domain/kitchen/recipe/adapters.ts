@@ -13,7 +13,6 @@ import type {
 
 const mapRecipeStepToDomain = (step: components['schemas']['RecipeStep']): RecipeStep => ({
   id: step.id,
-  index: step.index,
   instruction: step.instruction,
 })
 
@@ -38,7 +37,6 @@ export const mapRecipeToDomain = (recipe: components['schemas']['RecipeOutput'])
 const mapRecipeStepToApi = (
   step: CreateRecipeStepInput,
 ): components['schemas']['CreateRecipeStepInput'] => ({
-  index: step.index,
   instruction: step.instruction,
 })
 

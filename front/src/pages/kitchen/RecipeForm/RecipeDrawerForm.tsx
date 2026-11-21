@@ -4,11 +4,11 @@ import {
   DrawerContent,
   DrawerFooter,
   DrawerTrigger,
+  Spinner,
   useIsMobile,
 } from '@gnomo/uikit'
 import React, { useState } from 'react'
 
-import { GnomeLoading } from '@/components/GnomeLoading'
 import type { Recipe } from '@/domain'
 
 import { useConnector } from './connector'
@@ -44,25 +44,17 @@ export function RecipeDrawerForm(props: RecipeDrawerFormProps) {
       <DrawerTrigger render={children} />
 
       <DrawerContent className="h-dvh">
-        {creating || updating ? (
-          <div className="w-full h-full flex items-center justify-center">
-            <GnomeLoading gnome="chef" />
-          </div>
-        ) : (
-          <>
-            <div className="p-4 overflow-auto">
-              <RecipeForm id="recipe-form" recipe={recipe} setOpen={setOpen} />
-            </div>
-            <DrawerFooter>
-              <Button type="submit" form="recipe-form">
-                Save
-              </Button>
-              <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-                Cancel
-              </Button>
-            </DrawerFooter>
-          </>
-        )}
+        <div className="p-4 overflow-auto">
+          <RecipeForm id="recipe-form" recipe={recipe} setOpen={setOpen} />
+        </div>
+        <DrawerFooter>
+          <Button type="submit" form="recipe-form">
+            {creating || updating ? <Spinner /> : 'Save'}
+          </Button>
+          <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
+        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   )
