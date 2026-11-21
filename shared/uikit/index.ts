@@ -76,6 +76,7 @@ export {
   ItemTitle,
 } from './src/components/ui/item'
 export { Label } from './src/components/ui/label'
+export { ScrollArea, ScrollBar } from './src/components/ui/scroll-area'
 export { Separator } from './src/components/ui/separator'
 export {
   Sheet,

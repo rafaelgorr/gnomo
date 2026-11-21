@@ -28,7 +28,7 @@ async fn update_recipe(pool: Pool<Postgres>) -> sqlx::Result<()> {
             RecipeDto {
                 name: String::from("Recipe 1"),
                 description: Some(String::from("This is a test recipe")),
-                prep_time: 30,
+                prep_time: 60,
                 cook_time: 30,
             },
             vec![],
@@ -40,8 +40,8 @@ async fn update_recipe(pool: Pool<Postgres>) -> sqlx::Result<()> {
     let new_recipe = UpdateRecipeInput {
         name: "New recipe".to_string(),
         description: Some("New recipe description".to_string()),
-        prep_time: 60,
-        cook_time: 60,
+        prep_time: 120,
+        cook_time: 90,
     };
 
     let ingredient_1 = UpdateIngredientInput {

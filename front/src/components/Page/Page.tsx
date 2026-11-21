@@ -20,7 +20,10 @@ export function Page(props: PageProps) {
   const currentRoute = (pathname.split('/').at(1) || '/') as FileRoute
 
   return (
-    <div {...divProps} className={cn('flex flex-col h-screen max-h-full relative', className)}>
+    <div
+      {...divProps}
+      className={cn('flex flex-col h-screen max-h-full relative overflow-hidden', className)}
+    >
       <GnomeImage
         gnome={currentRoute}
         className={loading ? 'animate-pulse opacity-60' : undefined}

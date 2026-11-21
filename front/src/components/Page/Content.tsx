@@ -1,4 +1,4 @@
-import { cn } from '@gnomo/uikit'
+import { cn, ScrollArea } from '@gnomo/uikit'
 import type React from 'react'
 
 interface ContentProps extends React.ComponentProps<'div'> {
@@ -8,8 +8,8 @@ interface ContentProps extends React.ComponentProps<'div'> {
 export function Content(props: ContentProps) {
   const { children, className, renderLoading, ...divProps } = props
   return (
-    <div {...divProps} className={cn('flex-[1_1_0%] pt-2 overflow-auto')}>
-      <div className={className}>{renderLoading ?? children}</div>
-    </div>
+    <ScrollArea {...divProps} className={cn('pt-2 overflow-auto')}>
+      <div className={cn(className)}>{renderLoading ?? children}</div>
+    </ScrollArea>
   )
 }

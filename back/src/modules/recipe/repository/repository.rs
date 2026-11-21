@@ -348,7 +348,7 @@ impl RecipeRepository {
         let query = sqlx::query_as!(
             DbRecipe,
             r#"
-              INSERT INTO kitchen.db_recipe (id, name, description, cook_time, prep_time)
+              INSERT INTO kitchen.db_recipe (id, name, description, prep_time, cook_time)
               VALUES ($1, $2, $3, $4, $5)
               ON CONFLICT (id)
               DO UPDATE SET
