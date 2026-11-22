@@ -107,3 +107,7 @@ lint-front: ## Check for lint errors
 docker-front: 
 	docker compose up -d --no-deps --build front
 
+# DOCKER
+
+.PHONY: docker-release
+docker-release: docker-back docker-front

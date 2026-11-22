@@ -1,4 +1,8 @@
+import { toast } from '@gnomo/uikit'
 import type { Action, Middleware, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit'
+import type { AxiosError } from 'axios'
+
+import type { StoreState } from '.'
 
 const pendingLogParameters: Record<string, Parameters<typeof console.log>> = {}
 
@@ -52,6 +56,27 @@ export const errorMiddleware: Middleware =
           ? action.payload
           : '',
       )
+    }
+    return next(action)
+  }
+
+export const errorToastMiddleware: Middleware =
+  () => (next: ThunkDispatch<StoreState, unknown, Action>) => (actn) => {
+    const action = actn as PayloadAction<AxiosError<{ error: string } | string>>
+
+    if (action.type.includes('/rejected')) {
+      const responseData = action.payload.response?.data
+      const error = typeof responseData === 'object' ? responseData.error : responseData
+
+      toast.add({
+        type: 'error',
+        title: 'Erro',
+        description: error ?? 'Erro no servidor do gnomo',
+        priority: 'high',
+        // positionerProps: {
+        //   className: 'absolute top-0',
+        // },
+      })
     }
     return next(action)
   }

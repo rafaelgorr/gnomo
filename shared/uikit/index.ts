@@ -118,6 +118,21 @@ export { Skeleton } from './src/components/ui/skeleton'
 export { Spinner } from './src/components/ui/spinner'
 export { Textarea } from './src/components/ui/textarea'
 export {
+  createToastManager,
+  Toast,
+  toast,
+  ToastAction,
+  ToastClose,
+  ToastContent,
+  ToastDescription,
+  Toaster,
+  ToastPortal,
+  ToastProvider,
+  ToastTitle,
+  ToastViewport,
+  useToastManager,
+} from './src/components/ui/toast'
+export {
   Tooltip,
   TooltipContent,
   TooltipProvider,

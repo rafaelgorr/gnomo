@@ -66,7 +66,7 @@ export function Recipe() {
           ))}
         </div>
       </Page.Content>
-      <div className="absolute bottom-0 right-0">
+      <div className="absolute bottom-0 right-0 md:relative">
         <RecipeDrawerForm recipe={recipe}>
           <Button variant="outline" size="icon-lg">
             <EditIcon />

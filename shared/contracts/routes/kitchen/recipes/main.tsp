@@ -23,7 +23,7 @@ interface Recipes {
   @route("/{id}")
   update(@path id: string, @body request: UpdateRecipeRequest): UpdateRecipeResponse;
 
-  // @delete
-  // @route("/{id}")
-  // delete(@path id: int32): void;
+  @delete
+  @route("/{id}")
+  delete(@path id: string): void;
 }

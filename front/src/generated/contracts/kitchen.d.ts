@@ -30,7 +30,7 @@ export interface paths {
     get: operations['Recipes_get']
     put: operations['Recipes_update']
     post?: never
-    delete?: never
+    delete: operations['Recipes_delete']
     options?: never
     head?: never
     patch?: never
@@ -215,6 +215,26 @@ export interface operations {
         content: {
           'application/json': components['schemas']['UpdateRecipeResponse']
         }
+      }
+    }
+  }
+  Recipes_delete: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description There is no content to send for this request, but the headers may be useful. */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
     }
   }

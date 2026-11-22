@@ -1,3 +1,4 @@
+import { Toaster } from '@gnomo/uikit'
 import { Outlet, useRouter } from '@tanstack/react-router'
 import { useEffect } from 'react'
 
@@ -38,7 +39,9 @@ export function Root() {
           <MobileSidebarTrigger />
         </div>
         <Outlet />
+        <Toaster />
       </main>
+
       {/* {!import.meta.env.PROD ? <TanStackRouterDevtools /> : null} */}
     </>
   )

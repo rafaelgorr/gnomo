@@ -93,4 +93,8 @@ impl RecipeService {
 
         recipe
     }
+
+    pub async fn delete_recipe(&self, id: Uuid) -> Result<(), AppError> {
+        self.recipe_repository.delete_recipe(id).await
+    }
 }

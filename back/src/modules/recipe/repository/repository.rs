@@ -345,7 +345,7 @@ impl RecipeRepository {
             directions,
         } = db_recipe;
 
-        let query = sqlx::query_as!(
+        let recipe = sqlx::query_as!(
             DbRecipe,
             r#"
               INSERT INTO kitchen.db_recipe (id, name, description, prep_time, cook_time)
@@ -372,12 +372,8 @@ impl RecipeRepository {
             prep_time,
             cook_time
         )
-        .fetch_one(&mut *tx);
-
-        let recipe = match query.await {
-            Ok(recipe_response) => recipe_response,
-            Err(error) => return Err(AppError::Database(error)),
-        };
+        .fetch_one(&mut *tx)
+        .await?;
 
         self.remove_ingredients_by_recipe_id(id, &mut tx).await?;
         let recipe_ingredients: Vec<DbIngredient> = if ingredients.len() > 0 {
@@ -398,5 +394,25 @@ impl RecipeRepository {
         tx.commit().await?;
 
         Ok((recipe, recipe_ingredients, recipe_directions))
+    }
+
+    pub async fn delete_recipe(&self, id: Uuid) -> Result<(), AppError> {
+        let mut tx: Transaction<'_, Postgres> = self.db_pool.begin().await?;
+        self.remove_ingredients_by_recipe_id(id, &mut tx).await?;
+        self.remove_directions_by_recipe_id(id, &mut tx).await?;
+        sqlx::query_as!(
+            DbRecipe,
+            r#"
+              DELETE FROM kitchen.db_recipe
+              WHERE id = $1                  
+            "#,
+            id,
+        )
+        .execute(&mut *tx)
+        .await?;
+
+        tx.commit().await?;
+
+        Ok(())
     }
 }

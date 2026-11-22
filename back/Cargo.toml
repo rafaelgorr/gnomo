@@ -3,6 +3,11 @@ name = "back"
 version = "0.1.0"
 edition = "2024"
 
+[profile.dev]
+debug = true
+opt-level = 0
+debug-assertions = true
+
 [dependencies]
 axum = "0.8.9"
 chrono = { version = "0.4.45", features = ["serde"] }
