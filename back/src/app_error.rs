@@ -42,7 +42,11 @@ impl IntoResponse for AppError {
             AppError::NotFound => (StatusCode::NOT_FOUND, self.to_string()),
             AppError::BadRequest(msg) => (StatusCode::BAD_REQUEST, msg),
             AppError::RouteNotFound => (StatusCode::NOT_FOUND, self.to_string()),
-            AppError::ValidationError(msg) => (StatusCode::UNPROCESSABLE_ENTITY, msg),
+            AppError::ValidationError(msg) => {
+                let msg_vec: Vec<&str> = msg.split(':').collect();
+                let response_msg = msg_vec.iter().nth(1).unwrap_or(&"").to_string();
+                (StatusCode::UNPROCESSABLE_ENTITY, response_msg)
+            }
         };
 
         let body = Json(json!({

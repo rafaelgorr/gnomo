@@ -2,6 +2,7 @@
 
 @import 'tailwindcss';
 @import 'shadcn/tailwind.css';
+@import 'tw-animate-css';
 
 @theme inline {
   --font-sans: 'DM Sans', sans-serif;
@@ -51,8 +52,6 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-@import 'tailwindcss';
-
 :root {
   color-scheme: light;
 
@@ -81,7 +80,7 @@
   --muted: #e8dfce;
   --muted-foreground: #817661;
 
-  --destructive: #a45f48;
+  --destructive: #fd2424;
   --destructive-foreground: #ffffff;
 
   /* UI */

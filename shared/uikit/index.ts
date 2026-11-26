@@ -1,4 +1,24 @@
 export { ThemeProvider, useTheme } from './src/components/theme-provider'
+export {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from './src/components/ui/accordion'
+export {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogMedia,
+  AlertDialogOverlay,
+  AlertDialogPortal,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from './src/components/ui/alert-dialog'
 export { Button, buttonVariants } from './src/components/ui/button'
 export {
   ButtonGroup,
@@ -116,6 +136,13 @@ export {
 } from './src/components/ui/sidebar'
 export { Skeleton } from './src/components/ui/skeleton'
 export { Spinner } from './src/components/ui/spinner'
+export {
+  Tabs,
+  TabsContent,
+  TabsList,
+  tabsListVariants,
+  TabsTrigger,
+} from './src/components/ui/tabs'
 export { Textarea } from './src/components/ui/textarea'
 export {
   createToastManager,
