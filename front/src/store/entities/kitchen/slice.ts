@@ -17,18 +17,22 @@ const slice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(kitchenActions.getRecipes.fulfilled, (state, action) => {
-      adapter.addMany(state.recipes, action.payload)
-    })
-    builder.addCase(kitchenActions.getRecipe.fulfilled, (state, action) => {
-      adapter.addOne(state.recipes, action.payload)
-    })
-    builder.addCase(kitchenActions.updateRecipe.fulfilled, (state, action) => {
-      adapter.upsertOne(state.recipes, action.payload)
-    })
-    builder.addCase(kitchenActions.createRecipe.fulfilled, (state, action) => {
-      adapter.addOne(state.recipes, action.payload)
-    })
+    builder
+      .addCase(kitchenActions.getRecipes.fulfilled, (state, action) => {
+        adapter.addMany(state.recipes, action.payload)
+      })
+      .addCase(kitchenActions.getRecipe.fulfilled, (state, action) => {
+        adapter.addOne(state.recipes, action.payload)
+      })
+      .addCase(kitchenActions.updateRecipe.fulfilled, (state, action) => {
+        adapter.upsertOne(state.recipes, action.payload)
+      })
+      .addCase(kitchenActions.createRecipe.fulfilled, (state, action) => {
+        adapter.addOne(state.recipes, action.payload)
+      })
+      .addCase(kitchenActions.deleteRecipe.fulfilled, (state, action) => {
+        adapter.removeOne(state.recipes, action.meta.arg.id)
+      })
   },
 })
 

@@ -80,3 +80,14 @@ export const updateRecipe = async (
 
   return mapRecipeToDomain(data.recipe)
 }
+
+export type DeleteRecipe = {
+  input: { id: string }
+  output: void
+}
+
+export const deleteRecipe = async (
+  input: DeleteRecipe['input'],
+): Promise<DeleteRecipe['output']> => {
+  await api.delete<PutRecipeResponse>(`/api/kitchen/recipes/${input.id}`)
+}

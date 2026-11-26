@@ -1,28 +1,50 @@
-import {
-  Button,
-  ButtonGroup,
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-  Input,
-  Textarea,
-} from '@gnomo/uikit'
+import { cn, Tabs, TabsContent, TabsList, TabsTrigger } from '@gnomo/uikit'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { TimerIcon } from 'lucide-react'
+import { omit } from 'lodash-es'
+import { CookingPotIcon, ListOrderedIcon, type LucideIcon, WheatIcon } from 'lucide-react'
 import type React from 'react'
 import { useEffect } from 'react'
-import { Controller, FormProvider, type SubmitHandler, useForm } from 'react-hook-form'
+import { FormProvider, type SubmitHandler, useForm, useWatch } from 'react-hook-form'
+import { match } from 'ts-pattern'
 
 import type { Recipe } from '@/domain'
 import { useAppDispatch } from '@/store/hooks'
 
 import { useConnector } from './connector'
 import { DirectionsForm } from './DirectionsForm'
-import { IngredientsArrayForm } from './IngredientsForm'
+import { IngredientsForm } from './IngredientsForm'
+import { RecipeDataForm } from './RecipeDataForm'
 import { type RecipeSchema, recipeSchema } from './schema'
 
 type ExtendedProps = Omit<React.ComponentProps<'form'>, 'onSubmit'>
+
+type RecipeTabItem = {
+  type: 'recipe-data' | 'ingredients' | 'directions'
+  trigger: string
+  Icon: LucideIcon
+  content: React.ReactNode
+}
+
+const TAB_ITEMS: RecipeTabItem[] = [
+  {
+    type: 'recipe-data',
+    trigger: 'Informações',
+    Icon: CookingPotIcon,
+    content: <RecipeDataForm />,
+  },
+  {
+    type: 'ingredients',
+    trigger: 'Ingredientes',
+    Icon: WheatIcon,
+    content: <IngredientsForm />,
+  },
+  {
+    type: 'directions',
+    trigger: 'Modo de preparo',
+    Icon: ListOrderedIcon,
+    content: <DirectionsForm />,
+  },
+]
 
 interface RecipeFormProps extends ExtendedProps {
   recipe?: Recipe
@@ -74,102 +96,53 @@ export function RecipeForm(props: RecipeFormProps) {
       })
   }
 
+  const ingredients = useWatch({ control: form.control, name: 'ingredients' })
+  const directions = useWatch({ control: form.control, name: 'directions' })
+
+  const recipeDataErrors = !!Object.values(
+    omit(form.formState.errors, ['ingredients', 'directions']),
+  ).filter(Boolean).length
+  const hasIngredientsErrors = !!form.formState.errors.ingredients?.length
+  const hasDirectionsErrors = !!form.formState.errors.directions?.length
+
   return (
     <FormProvider {...form}>
       <form {...formProps} id={id} onSubmit={form.handleSubmit(handleSubmit)}>
-        <FieldGroup>
-          <Controller
-            name="name"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="recipe-name">Nome</FieldLabel>
-                <Input
-                  {...field}
-                  id="recipe-name"
-                  aria-invalid={fieldState.invalid}
-                  autoComplete="off"
-                />
-                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-              </Field>
-            )}
-          />
-          <Controller
-            name="description"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="recipe-description">Descrição</FieldLabel>
-                <Textarea
-                  {...field}
-                  id="recipe-description"
-                  aria-invalid={fieldState.invalid}
-                  autoComplete="off"
-                />
-                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-              </Field>
-            )}
-          />
-          <div className="grid grid-cols-2 gap-2">
-            <Controller
-              name="prepTime"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="recipe-prep-time">Tempo de preparo</FieldLabel>
-                  <ButtonGroup>
-                    <Button variant="outline" size="icon" tabIndex={-1}>
-                      <TimerIcon />
-                    </Button>
-                    <Input
-                      {...field}
-                      id="recipe-prep-time"
-                      aria-invalid={fieldState.invalid}
-                      className="text-center"
-                      autoComplete="off"
-                      type="number"
-                    />
-                    <Button variant="outline" tabIndex={-1}>
-                      min
-                    </Button>
-                  </ButtonGroup>
-                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
-            <Controller
-              name="cookTime"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="recipe-cook-time">Tempo de cozimento</FieldLabel>
-                  <ButtonGroup>
-                    <Button variant="outline" size="icon" tabIndex={-1}>
-                      <TimerIcon />
-                    </Button>
-                    <Input
-                      {...field}
-                      id="recipe-cook-time"
-                      aria-invalid={fieldState.invalid}
-                      className="text-center"
-                      type="number"
-                      autoComplete="off"
-                    />
-                    <Button variant="outline" tabIndex={-1}>
-                      min
-                    </Button>
-                  </ButtonGroup>
-                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
-          </div>
-
-          <div className="flex flex-col gap-6">
-            <IngredientsArrayForm />
-            <DirectionsForm />
-          </div>
-        </FieldGroup>
+        <Tabs defaultValue={['recipe-data']}>
+          <TabsList variant="line">
+            {TAB_ITEMS.map((item) => {
+              const { counter, hasError } = match(item.type)
+                .returnType<{ counter?: number; hasError: boolean }>()
+                .with('ingredients', () => ({
+                  counter: ingredients.length,
+                  hasError: hasIngredientsErrors,
+                }))
+                .with('directions', () => ({
+                  counter: directions.length,
+                  hasError: hasDirectionsErrors,
+                }))
+                .otherwise(() => ({ hasError: recipeDataErrors }))
+              return (
+                <TabsTrigger
+                  key={item.type}
+                  value={item.type}
+                  className={cn('flex gap-2 items-center', hasError ? 'text-destructive' : '')}
+                >
+                  {/* <item.Icon size={16} /> */}
+                  <p className="text-xs font-bold">
+                    {item.trigger}
+                    {counter !== undefined ? ` (${counter})` : ''}
+                  </p>
+                </TabsTrigger>
+              )
+            })}
+          </TabsList>
+          {TAB_ITEMS.map((item) => (
+            <TabsContent key={item.type} value={item.type} className="mt-4">
+              {item.content}
+            </TabsContent>
+          ))}
+        </Tabs>
       </form>
     </FormProvider>
   )

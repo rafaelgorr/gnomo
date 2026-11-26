@@ -2,6 +2,8 @@ import { toast } from '@gnomo/uikit'
 import type { Action, Middleware, PayloadAction, ThunkDispatch } from '@reduxjs/toolkit'
 import type { AxiosError } from 'axios'
 
+import GnomeMessedUp from '@/assets/gnome_icon_messed_up.svg?react'
+
 import type { StoreState } from '.'
 
 const pendingLogParameters: Record<string, Parameters<typeof console.log>> = {}
@@ -70,8 +72,18 @@ export const errorToastMiddleware: Middleware =
 
       toast.add({
         type: 'error',
-        title: 'Erro',
-        description: error ?? 'Erro no servidor do gnomo',
+        title: (
+          <div className="flex gap-2 items-center justify-center">
+            <div className="flex-1">
+              <p className="flex-1">Problemas no servidor</p>
+              <p className="text-accenttext-sm text-muted-foreground">
+                {error ?? 'Erro no servidor do gnomo'}
+              </p>
+            </div>
+
+            <GnomeMessedUp className="size-10" />
+          </div>
+        ),
         priority: 'high',
         // positionerProps: {
         //   className: 'absolute top-0',

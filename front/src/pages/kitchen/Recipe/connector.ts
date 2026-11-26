@@ -5,11 +5,13 @@ import { useAppSelector } from '@/store/hooks'
 export const useConnector = (recipeId: string) => {
   const selectors = {
     fetching: useAppSelector(featureSelectors.isFeatureFetching('getRecipe')),
+    deleting: useAppSelector(featureSelectors.isFeatureFetching('deleteRecipe')),
     recipe: useAppSelector((state) => entitiesSelectors.getRecipe(state, recipeId)),
   }
 
   const actions = {
     getRecipe: kitchenActions.getRecipe,
+    deleteRecipe: kitchenActions.deleteRecipe,
   }
 
   return {

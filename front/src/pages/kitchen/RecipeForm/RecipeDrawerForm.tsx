@@ -33,6 +33,8 @@ export function RecipeDrawerForm(props: RecipeDrawerFormProps) {
 
   const [open, setOpen] = useState(false)
 
+  const loading = creating || updating
+
   return (
     <Drawer
       {...drawerProps}
@@ -42,17 +44,17 @@ export function RecipeDrawerForm(props: RecipeDrawerFormProps) {
       showSwipeHandle={isMobile}
     >
       <DrawerTrigger render={children} />
-
-      <DrawerContent className="h-dvh">
+      <DrawerContent className="h-dvh max-h-[98vh]">
         <div className="p-4 overflow-auto">
           <RecipeForm id="recipe-form" recipe={recipe} setOpen={setOpen} />
         </div>
         <DrawerFooter>
-          <Button type="submit" form="recipe-form">
-            {creating || updating ? <Spinner /> : 'Save'}
+          <Button type="submit" form="recipe-form" disabled={loading}>
+            Salvar
+            {loading ? <Spinner data-icon="inline-end" /> : null}
           </Button>
           <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-            Cancel
+            Cancelar
           </Button>
         </DrawerFooter>
       </DrawerContent>

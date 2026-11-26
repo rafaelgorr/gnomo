@@ -50,4 +50,16 @@ export const kitchenActions = {
       }
     },
   ),
+  deleteRecipe: createAsyncThunk(
+    `${prefix}/deleteRecipe`,
+    async (params: kitchenApi.DeleteRecipe['input'], thunkApi) => {
+      try {
+        const result = await kitchenApi.deleteRecipe(params)
+
+        return result
+      } catch (e) {
+        return thunkApi.rejectWithValue(e)
+      }
+    },
+  ),
 } as const

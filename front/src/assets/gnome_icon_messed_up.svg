@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Tall, slightly crooked hat -->
+  <path d="M27 55 L47 20 Q49 16 53 17 L57 14 L61 17 Q64 18 67 23 L91 57" />
+  <path d="M28 55 Q58 47 91 57" />
+  <!-- Pointed ear -->
+  <path d="M31 61 L12 55 Q18 68 31 77" />
+  <!-- Face -->
+  <path d="M29 59 Q32 54 39 54 L88 56 Q96 58 98 65 L97 82 Q95 94 86 99 L83 106 L46 106 L44 98 Q34 94 30 83 Z" />
+  <!-- Eyes: sideways glance -->
+  <path d="M48 68 Q55 64 63 68 L61 72 Q55 74 49 72 Z" />
+  <path d="M72 67 Q80 64 87 68 L85 72 Q78 74 73 72 Z" />
+  <path d="M56 69 L56 71 M80 69 L80 71" />
+  <!-- Nose and unimpressed mouth -->
+  <path d="M68 72 L72 81 Q69 84 65 83" />
+  <path d="M48 89 Q61 88 76 89" />
+  <!-- Neck and shoulders -->
+  <path d="M44 99 L44 108 Q32 111 25 119" />
+  <path d="M83 99 L83 108 Q97 111 104 119" />
+</svg>

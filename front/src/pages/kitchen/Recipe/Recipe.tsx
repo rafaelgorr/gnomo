@@ -1,8 +1,26 @@
-import { Button, Item, ItemContent, ItemTitle, Label } from '@gnomo/uikit'
-import { useParams } from '@tanstack/react-router'
-import { EditIcon } from 'lucide-react'
-import { useEffect } from 'react'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+  Button,
+  Item,
+  ItemContent,
+  ItemTitle,
+  Label,
+  Spinner,
+  toast,
+} from '@gnomo/uikit'
+import { useNavigate, useParams } from '@tanstack/react-router'
+import { EditIcon, TrashIcon } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
+import GnomeMessedUp from '@/assets/gnome_icon_messed_up.svg?react'
 import { Page } from '@/components/Page'
 import type { Recipe } from '@/domain'
 import { useAppDispatch } from '@/store/hooks'
@@ -11,19 +29,38 @@ import { RecipeDrawerForm } from '../RecipeForm/RecipeDrawerForm'
 import { useConnector } from './connector'
 
 export function Recipe() {
+  const navigate = useNavigate({ from: '/kitchen/recipes/$recipeId' })
   const { recipeId } = useParams({ from: '/_kitchen/kitchen/recipes/$recipeId' })
 
   const dispatch = useAppDispatch()
   const { actions, selectors } = useConnector(recipeId)
 
+  const [deleteOpen, setDeleteOpen] = useState(false)
+
   useEffect(() => {
     void dispatch(actions.getRecipe({ id: recipeId }))
   }, [dispatch, actions, recipeId])
 
-  const { recipe, fetching } = selectors
+  const { recipe, fetching, deleting } = selectors
 
   if (!recipe) {
     return null
+  }
+
+  const handleDeleteRecipe = () => {
+    void dispatch(actions.deleteRecipe({ id: recipe.id })).then(() => {
+      toast.add({
+        type: 'success',
+        title: (
+          <div className="flex gap-2 items-center">
+            <p className="">Receita removida com sucesso!</p>
+            <GnomeMessedUp className="size-8 flex-1" />
+          </div>
+        ),
+      })
+      setDeleteOpen(false)
+      void navigate({ to: '/kitchen/recipes' })
+    })
   }
 
   return (
@@ -66,7 +103,36 @@ export function Recipe() {
           ))}
         </div>
       </Page.Content>
-      <div className="absolute bottom-0 right-0 md:relative">
+      <div className="absolute flex flex-col gap-1 bottom-0 right-0 md:relative">
+        <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+          <AlertDialogTrigger
+            render={
+              <Button variant="outline" size="icon-lg">
+                <TrashIcon />
+              </Button>
+            }
+          />
+          <AlertDialogContent size="sm">
+            <AlertDialogHeader>
+              <AlertDialogTitle>Remover receita</AlertDialogTitle>
+              <AlertDialogDescription>
+                Você realmente quer remover a receita "<b>{recipe.name}</b>"?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+
+            <AlertDialogFooter>
+              <AlertDialogCancel variant="outline">Cancelar</AlertDialogCancel>
+              <AlertDialogAction
+                variant="destructive"
+                disabled={deleting}
+                onClick={handleDeleteRecipe}
+              >
+                Sim, remova
+                {deleting ? <Spinner data-icon="inline-end" /> : null}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
         <RecipeDrawerForm recipe={recipe}>
           <Button variant="outline" size="icon-lg">
             <EditIcon />
