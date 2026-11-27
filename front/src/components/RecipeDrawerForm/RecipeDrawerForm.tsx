@@ -54,7 +54,7 @@ export function RecipeDrawerForm(props: RecipeDrawerFormProps) {
           )
         }
       />
-      <DrawerContent className="h-[98vh] flex">
+      <DrawerContent className="h-[98vh] max-h-[90vh] flex">
         <div className="flex-1 overflow-hidden">
           <RecipeForm id="recipe-form" recipe={recipe} setOpen={setOpen} className="h-full" />
         </div>
