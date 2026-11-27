@@ -19,6 +19,14 @@ export {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from './src/components/ui/alert-dialog'
+export {
+  Avatar,
+  AvatarBadge,
+  AvatarFallback,
+  AvatarGroup,
+  AvatarGroupCount,
+  AvatarImage,
+} from './src/components/ui/avatar'
 export { Button, buttonVariants } from './src/components/ui/button'
 export {
   ButtonGroup,
