@@ -55,8 +55,8 @@ export function DeleteAlertDialog() {
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger
         render={
-          <Button variant="outline" size="icon-lg">
-            <TrashIcon />
+          <Button variant="outline" className="size-10">
+            <TrashIcon className="size-5" />
           </Button>
         }
       />

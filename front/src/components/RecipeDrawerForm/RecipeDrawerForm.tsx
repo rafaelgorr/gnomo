@@ -48,13 +48,13 @@ export function RecipeDrawerForm(props: RecipeDrawerFormProps) {
           children ? (
             <>{children}</>
           ) : (
-            <Button variant="outline" size="icon-lg">
-              {recipe ? <EditIcon /> : <PlusIcon />}
+            <Button variant="outline" className="size-10">
+              {recipe ? <EditIcon className="size-5" /> : <PlusIcon className="size-5" />}
             </Button>
           )
         }
       />
-      <DrawerContent className="h-[98vh] flex max-h-[98vh]">
+      <DrawerContent className="h-[98vh] flex">
         <div className="flex-1 overflow-hidden">
           <RecipeForm id="recipe-form" recipe={recipe} setOpen={setOpen} className="h-full" />
         </div>
