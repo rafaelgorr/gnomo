@@ -26,6 +26,24 @@ const data = {
           url: '/kitchen/recipes',
         },
         {
+          title: 'Produtos',
+          url: '#',
+        },
+        {
+          title: 'Ranking',
+          url: '#',
+        },
+      ],
+    },
+    {
+      title: 'Bebê',
+      url: '#',
+      items: [
+        {
+          title: 'Items do bebê',
+          url: '#',
+        },
+        {
           title: 'Ranking',
           url: '#',
         },
